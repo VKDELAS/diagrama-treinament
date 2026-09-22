@@ -2,27 +2,38 @@ import type { Exercise } from '../types';
 
 export const EXERCICIOS: Exercise[] = [
   {
-    id: 'ex-01-loja-virtual',
-    titulo: '01-loja-virtual.uml',
-    categoria: 'E-commerce',
+    id: 'ex-01-unip-np1-ecommerce',
+    titulo: '01-prova-np1-unip-ecommerce.uml',
+    categoria: 'Prova NP1 (UNIP)',
     enunciado:
-      'Em uma loja virtual, o Cliente interage com o sistema para Realizar Pedido. Ao realizar o pedido, o sistema obrigatoriamente deve Validar Estoque para garantir a disponibilidade dos produtos. Além disso, se o cliente possuir um código promocional válido, ele pode opcionalmente Aplicar Cupom de Desconto.',
+      'Questão Oficial da Prova NP1: Em um sistema de e-commerce, o Cliente pode Realizar Compra. Ao finalizar uma compra, o sistema obrigatoriamente deve Processar Pagamento. Além disso, caso o cliente disponha de um cupom promocional, ele pode opcionalmente Aplicar Cupom de Desconto. Em paralelo, o Gerente interage para Cadastrar Produto, e para cada produto cadastrado, o sistema exige obrigatoriamente Validar Dados do Produto.',
     regra: 'Dica de ouro: "sempre / obrigatoriamente" → <<include>> · "caso / se / opcionalmente" → <<extend>>',
     pecas: {
-      atores: ['Cliente'],
-      casosDeUso: ['Realizar Pedido', 'Validar Estoque', 'Aplicar Cupom de Desconto'],
+      atores: ['Cliente', 'Gerente'],
+      casosDeUso: [
+        'Realizar Compra',
+        'Processar Pagamento',
+        'Aplicar Cupom de Desconto',
+        'Cadastrar Produto',
+        'Validar Dados do Produto',
+      ],
     },
     gabarito: {
       nodes: [
         { id: 'g-cli', tipo: 'ator', label: 'Cliente' },
-        { id: 'g-ped', tipo: 'casoDeUso', label: 'Realizar Pedido' },
-        { id: 'g-est', tipo: 'casoDeUso', label: 'Validar Estoque' },
+        { id: 'g-ger', tipo: 'ator', label: 'Gerente' },
+        { id: 'g-cmp', tipo: 'casoDeUso', label: 'Realizar Compra' },
+        { id: 'g-pag', tipo: 'casoDeUso', label: 'Processar Pagamento' },
         { id: 'g-cup', tipo: 'casoDeUso', label: 'Aplicar Cupom de Desconto' },
+        { id: 'g-cad', tipo: 'casoDeUso', label: 'Cadastrar Produto' },
+        { id: 'g-val', tipo: 'casoDeUso', label: 'Validar Dados do Produto' },
       ],
       edges: [
-        { source: 'Cliente', target: 'Realizar Pedido', tipo: 'associacao' },
-        { source: 'Realizar Pedido', target: 'Validar Estoque', tipo: 'include' },
-        { source: 'Aplicar Cupom de Desconto', target: 'Realizar Pedido', tipo: 'extend' },
+        { source: 'Cliente', target: 'Realizar Compra', tipo: 'associacao' },
+        { source: 'Gerente', target: 'Cadastrar Produto', tipo: 'associacao' },
+        { source: 'Realizar Compra', target: 'Processar Pagamento', tipo: 'include' },
+        { source: 'Aplicar Cupom de Desconto', target: 'Realizar Compra', tipo: 'extend' },
+        { source: 'Cadastrar Produto', target: 'Validar Dados do Produto', tipo: 'include' },
       ],
     },
   },
