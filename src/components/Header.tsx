@@ -8,9 +8,12 @@ import {
   Eye,
   EyeOff,
   BookOpen,
+  Award,
+  Sparkles,
 } from 'lucide-react';
 import { ClassSummaryModal } from './ClassSummaryModal';
 import { ExercisePickerModal } from './ExercisePickerModal';
+import { SimuladoModal, type SimuladoTab } from './SimuladoModal';
 
 export const Header: React.FC = () => {
   const {
@@ -25,6 +28,8 @@ export const Header: React.FC = () => {
 
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [isSimuladoOpen, setIsSimuladoOpen] = useState(false);
+  const [simuladoTab, setSimuladoTab] = useState<SimuladoTab>('simulado');
 
   const isCurrentCompleted = completedExercises.includes(currentExercise.id);
   const totalExercises = exercises.length;
@@ -93,17 +98,43 @@ export const Header: React.FC = () => {
           </button>
         </div>
 
-        {/* Ações da Direita: Resumo da Aula & Toggle Enunciado */}
+        {/* Ações da Direita: Simulado, Flashcards, Resumo e Enunciado */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/* Botão Resumo da Aula (Solicitado pelo usuário) */}
+          {/* Botão Simulado NP1 (Solicitado pelo usuário com perguntas dinâmicas e nota) */}
+          <button
+            onClick={() => {
+              setSimuladoTab('simulado');
+              setIsSimuladoOpen(true);
+            }}
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-95 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/30 cursor-pointer min-h-[36px] touch-manipulation"
+            title="Iniciar Simulado Oficial NP1 (perguntas mudam a cada início)"
+          >
+            <Award size={15} className="shrink-0" />
+            <span className="hidden xs:inline">Simulado NP1</span>
+            <span className="xs:hidden">Simulado</span>
+          </button>
+
+          {/* Botão Flashcards (Estudo rápido com flip cards) */}
+          <button
+            onClick={() => {
+              setSimuladoTab('flashcards');
+              setIsSimuladoOpen(true);
+            }}
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-700/60 active:scale-95 text-indigo-200 hover:text-white text-xs font-bold transition-all cursor-pointer min-h-[36px] touch-manipulation"
+            title="Estudar com Flashcards interativos"
+          >
+            <Sparkles size={14} className="shrink-0 text-amber-400" />
+            <span className="hidden md:inline">Flashcards</span>
+          </button>
+
+          {/* Botão Resumo da Aula */}
           <button
             onClick={() => setIsSummaryOpen(true)}
-            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 active:scale-95 text-white text-xs font-bold transition-all shadow-md shadow-blue-600/30 cursor-pointer min-h-[36px] touch-manipulation"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 hover:text-white border border-slate-700 text-xs font-medium transition-all cursor-pointer min-h-[36px] touch-manipulation"
             title="Abrir o resumo completo da aula de hoje"
           >
-            <BookOpen size={14} className="shrink-0" />
-            <span className="hidden xs:inline">Resumo da Aula</span>
-            <span className="xs:hidden">Resumo</span>
+            <BookOpen size={14} className="shrink-0 text-blue-400" />
+            <span className="hidden lg:inline">Resumo Teórico</span>
           </button>
 
           {/* Botão Ver/Ocultar Enunciado */}
@@ -117,17 +148,27 @@ export const Header: React.FC = () => {
             title={showExercisePrompt ? 'Ocultar enunciado' : 'Mostrar enunciado'}
           >
             {showExercisePrompt ? <EyeOff size={14} /> : <Eye size={14} />}
-            <span className="hidden lg:inline">
+            <span className="hidden xl:inline">
               {showExercisePrompt ? 'Ocultar' : 'Enunciado'}
             </span>
           </button>
         </div>
       </header>
 
-      {/* Modais de Resumo e Picker */}
+      {/* Modais de Simulado, Resumo e Picker */}
+      <SimuladoModal
+        isOpen={isSimuladoOpen}
+        onClose={() => setIsSimuladoOpen(false)}
+        defaultTab={simuladoTab}
+      />
       <ClassSummaryModal
         isOpen={isSummaryOpen}
         onClose={() => setIsSummaryOpen(false)}
+        onOpenSimulado={(tab = 'simulado') => {
+          setIsSummaryOpen(false);
+          setSimuladoTab(tab);
+          setIsSimuladoOpen(true);
+        }}
       />
       <ExercisePickerModal
         isOpen={isPickerOpen}

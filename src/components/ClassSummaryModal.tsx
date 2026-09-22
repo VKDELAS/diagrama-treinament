@@ -16,11 +16,13 @@ import { useDiagramStore } from '../store/useDiagramStore';
 interface ClassSummaryModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenSimulado?: (tab?: 'simulado' | 'flashcards') => void;
 }
 
 export const ClassSummaryModal: React.FC<ClassSummaryModalProps> = ({
   isOpen,
   onClose,
+  onOpenSimulado,
 }) => {
   const { setExercise, exercises } = useDiagramStore();
   const [activeTab, setActiveTab] = useState<'teoria' | 'gabarito' | 'questao7'>('teoria');
@@ -63,12 +65,24 @@ export const ClassSummaryModal: React.FC<ClassSummaryModalProps> = ({
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-colors cursor-pointer"
-          >
-            <X size={20} />
-          </button>
+          <div className="flex items-center gap-2">
+            {onOpenSimulado && (
+              <button
+                onClick={() => onOpenSimulado('simulado')}
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/30 cursor-pointer"
+                title="Ir para o Simulado Oficial"
+              >
+                <Award size={14} />
+                <span>Simulado NP1</span>
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="p-1.5 text-slate-400 hover:text-white rounded-xl hover:bg-slate-800 transition-colors cursor-pointer"
+            >
+              <X size={20} />
+            </button>
+          </div>
         </div>
 
         {/* Abas de Navegação */}
