@@ -1,10 +1,9 @@
 import React from 'react';
-import { Search, Plus, X, Compass } from 'lucide-react';
+import { Search, X, Compass } from 'lucide-react';
 
 interface HubHeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
-  onOpenAddModal: () => void;
   activeCount: number;
   totalCount: number;
 }
@@ -12,7 +11,6 @@ interface HubHeaderProps {
 export const HubHeader: React.FC<HubHeaderProps> = ({
   searchQuery,
   onSearchChange,
-  onOpenAddModal,
   activeCount,
   totalCount,
 }) => {
@@ -75,9 +73,9 @@ export const HubHeader: React.FC<HubHeaderProps> = ({
           </div>
         </div>
 
-        {/* Lado Direito: Status e Ação Rápida */}
+        {/* Lado Direito: Status com Indicador Pulsante */}
         <div className="flex items-center gap-2.5 shrink-0">
-          <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/[0.02] border border-white/[0.06]">
+          <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/[0.02] border border-white/[0.06]">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
@@ -85,21 +83,11 @@ export const HubHeader: React.FC<HubHeaderProps> = ({
             <span className="text-[11px] font-medium text-zinc-300">
               {activeCount} {activeCount === 1 ? 'Matéria Pronta' : 'Matérias Prontas'}
             </span>
-            <span className="text-zinc-600 text-[10px]">•</span>
-            <span className="text-[11px] text-zinc-400">
+            <span className="text-zinc-600 text-[10px] hidden xs:inline">•</span>
+            <span className="text-[11px] text-zinc-400 hidden xs:inline">
               {totalCount} Total
             </span>
           </div>
-
-          <button
-            onClick={onOpenAddModal}
-            className="flex items-center gap-1.5 h-8 px-3 rounded-full bg-white/[0.05] hover:bg-white/[0.09] active:scale-95 border border-white/[0.1] text-xs font-medium text-zinc-100 hover:text-white transition-all cursor-pointer shadow-sm touch-manipulation"
-            title="Adicionar nova matéria ao portal"
-          >
-            <Plus size={14} className="text-blue-400" />
-            <span className="hidden xs:inline">Nova Matéria</span>
-            <span className="xs:hidden">Criar</span>
-          </button>
         </div>
       </div>
     </header>

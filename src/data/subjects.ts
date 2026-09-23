@@ -246,35 +246,3 @@ export const DEFAULT_SUBJECTS: SubjectItem[] = [
     ],
   },
 ];
-
-const STORAGE_KEY = 'nexus_custom_subjects_v1';
-
-export function loadStoredSubjects(): SubjectItem[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return DEFAULT_SUBJECTS;
-    const custom = JSON.parse(raw) as SubjectItem[];
-    // Mescla padrões com customizados (sem duplicar IDs)
-    const existingIds = new Set(DEFAULT_SUBJECTS.map((s) => s.id));
-    const merged = [...DEFAULT_SUBJECTS];
-    for (const item of custom) {
-      if (!existingIds.has(item.id)) {
-        merged.push(item);
-      }
-    }
-    return merged;
-  } catch {
-    return DEFAULT_SUBJECTS;
-  }
-}
-
-export function saveStoredSubjects(subjects: SubjectItem[]): void {
-  try {
-    const customOnly = subjects.filter(
-      (s) => !DEFAULT_SUBJECTS.some((def) => def.id === s.id)
-    );
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(customOnly));
-  } catch (e) {
-    console.error('Falha ao salvar matérias:', e);
-  }
-}

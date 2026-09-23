@@ -15,8 +15,7 @@ import {
   Search,
 } from 'lucide-react';
 import { HubHeader } from './HubHeader';
-import { AddSubjectModal } from './AddSubjectModal';
-import { loadStoredSubjects, saveStoredSubjects } from '../data/subjects';
+import { DEFAULT_SUBJECTS } from '../data/subjects';
 import type { SubjectItem, AppModule } from '../types/navigation';
 
 interface HubViewProps {
@@ -28,12 +27,9 @@ export const HubView: React.FC<HubViewProps> = ({
   onSelectSubject,
   onQuickLaunchModule,
 }) => {
-  const [subjects, setSubjects] = useState<SubjectItem[]>(() =>
-    loadStoredSubjects()
-  );
+  const subjects = DEFAULT_SUBJECTS;
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'available' | 'upcoming'>('all');
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   // Ícones por ID ou nome
   const getSubjectIcon = (id: string) => {
@@ -49,13 +45,6 @@ export const HubView: React.FC<HubViewProps> = ({
       default:
         return BookPlus;
     }
-  };
-
-  // Manipulador de adição de nova matéria
-  const handleAddSubject = (newSubject: SubjectItem) => {
-    const updated = [...subjects, newSubject];
-    setSubjects(updated);
-    saveStoredSubjects(updated);
   };
 
   // Filtragem com busca
@@ -85,7 +74,6 @@ export const HubView: React.FC<HubViewProps> = ({
       <HubHeader
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        onOpenAddModal={() => setIsAddModalOpen(true)}
         activeCount={activeCount}
         totalCount={totalCount}
       />
@@ -157,7 +145,7 @@ export const HubView: React.FC<HubViewProps> = ({
               Nenhuma matéria encontrada
             </h3>
             <p className="mt-1 text-xs text-zinc-400">
-              Não encontramos resultados para &quot;{searchQuery}&quot;. Tente outro termo ou cadastre uma nova matéria.
+              Não encontramos resultados para &quot;{searchQuery}&quot;.
             </p>
             <button
               onClick={() => setSearchQuery('')}
@@ -306,26 +294,6 @@ export const HubView: React.FC<HubViewProps> = ({
                 </div>
               );
             })}
-
-            {/* Card para Adicionar Matéria Nova */}
-            <div
-              onClick={() => setIsAddModalOpen(true)}
-              className="group relative border-2 border-dashed border-white/[0.09] hover:border-blue-500/50 bg-white/[0.01] hover:bg-white/[0.03] rounded-3xl p-6 sm:p-7 transition-all duration-200 cursor-pointer flex flex-col justify-center items-center text-center min-h-[220px]"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-white/[0.04] group-hover:bg-blue-600/20 group-hover:border-blue-500/40 border border-white/[0.08] flex items-center justify-center text-zinc-400 group-hover:text-blue-400 transition-all mb-3 group-hover:scale-105">
-                <BookPlus size={22} />
-              </div>
-              <h3 className="text-base font-bold text-white group-hover:text-blue-300 transition-colors">
-                Adicionar Nova Matéria
-              </h3>
-              <p className="mt-1.5 text-xs text-zinc-400 max-w-xs leading-relaxed">
-                Cadastre uma nova disciplina com seus próprios flashcards, resumos e simulados personalizados.
-              </p>
-              <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-blue-400 group-hover:translate-x-0.5 transition-transform">
-                <span>Criar Matéria</span>
-                <ArrowRight size={13} />
-              </span>
-            </div>
           </div>
         )}
       </main>
@@ -339,13 +307,6 @@ export const HubView: React.FC<HubViewProps> = ({
         </div>
         <p>Desenvolvido para máxima fixação e preparação de provas</p>
       </footer>
-
-      {/* Modal de Adicionar Matéria */}
-      <AddSubjectModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAddSubject={handleAddSubject}
-      />
     </div>
   );
 };
