@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Sparkles,
   ChevronLeft,
@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   XCircle,
   Filter,
+  Layers,
 } from 'lucide-react';
 import { ModuleHeader } from './ModuleHeader';
 import { FLASHCARDS_B1_DATA, type Flashcard } from '../data/flashcardsB1Data';
@@ -18,16 +19,29 @@ interface FlashcardsB1ViewProps {
 
 export const FlashcardsB1View: React.FC<FlashcardsB1ViewProps> = ({ onBack }) => {
   const [deck, setDeck] = useState<Flashcard[]>(FLASHCARDS_B1_DATA);
+  const [selectedCategory, setSelectedCategory] = useState<string>('Todas');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [knownCardIds, setKnownCardIds] = useState<number[]>([]);
   const [unknownCardIds, setUnknownCardIds] = useState<number[]>([]);
   const [onlyUnknownMode, setOnlyUnknownMode] = useState(false);
 
-  // Lista de cartas ativas conforme o filtro "Apenas Não Sei"
-  const activeDeck = onlyUnknownMode
-    ? deck.filter((c) => unknownCardIds.includes(c.id))
-    : deck;
+  // Lista única de categorias para as abas de variedade
+  const categories = useMemo(() => {
+    const cats = Array.from(new Set(FLASHCARDS_B1_DATA.map((c) => c.categoria)));
+    return ['Todas', ...cats];
+  }, []);
+
+  // Filtragem composta: Categoria + Modo "Apenas Não Sei"
+  const activeDeck = useMemo(() => {
+    return deck.filter((c) => {
+      const matchCat =
+        selectedCategory === 'Todas' || c.categoria === selectedCategory;
+      const matchUnknown =
+        !onlyUnknownMode || unknownCardIds.includes(c.id);
+      return matchCat && matchUnknown;
+    });
+  }, [deck, selectedCategory, onlyUnknownMode, unknownCardIds]);
 
   const currentCard = activeDeck[currentIndex] || activeDeck[0];
   const totalCards = activeDeck.length;
@@ -46,7 +60,7 @@ export const FlashcardsB1View: React.FC<FlashcardsB1ViewProps> = ({ onBack }) =>
     if (currentIndex > 0) {
       setCurrentIndex((prev) => prev - 1);
     } else {
-      setCurrentIndex(totalCards - 1);
+      setCurrentIndex(Math.max(0, totalCards - 1));
     }
   };
 
@@ -75,6 +89,12 @@ export const FlashcardsB1View: React.FC<FlashcardsB1ViewProps> = ({ onBack }) =>
     setOnlyUnknownMode((prev) => !prev);
   };
 
+  const handleCategoryChange = (cat: string) => {
+    setIsFlipped(false);
+    setSelectedCategory(cat);
+    setCurrentIndex(0);
+  };
+
   const handleResetProgress = () => {
     setKnownCardIds([]);
     setUnknownCardIds([]);
@@ -87,13 +107,42 @@ export const FlashcardsB1View: React.FC<FlashcardsB1ViewProps> = ({ onBack }) =>
     <div className="w-screen h-screen flex flex-col overflow-hidden bg-[#080b11] text-slate-100 font-sans antialiased selection:bg-indigo-600/30">
       {/* Cabeçalho do Módulo */}
       <ModuleHeader
-        title="Flashcards de Fixação B1"
-        subtitle="Memorização ativa das 7 questões, conceitos e gabarito oficial"
-        badge="B1 • FLASHCARDS"
+        title="Flashcards de Banco de Dados"
+        subtitle="43 cartas divididas por variedades de conteúdo e pegadinhas de prova"
+        badge="B1 • 43 CARTAS"
         icon={Sparkles}
         badgeColor="bg-indigo-900/60 border-indigo-700/60 text-indigo-300"
         onBack={onBack}
       />
+
+      {/* Barra de Seleção de Variedades / Categorias (Scroll Horizontal no Celular) */}
+      <div className="bg-slate-950/70 border-b border-white/[0.06] px-3 sm:px-8 py-2 shrink-0 flex items-center gap-1.5 overflow-x-auto no-scrollbar touch-manipulation">
+        <div className="flex items-center gap-1 text-[11px] font-semibold text-zinc-400 mr-1 shrink-0">
+          <Layers size={13} className="text-indigo-400" />
+          <span className="hidden sm:inline">Variedades:</span>
+        </div>
+        {categories.map((cat) => {
+          const count =
+            cat === 'Todas'
+              ? FLASHCARDS_B1_DATA.length
+              : FLASHCARDS_B1_DATA.filter((c) => c.categoria === cat).length;
+          const isSelected = selectedCategory === cat;
+
+          return (
+            <button
+              key={cat}
+              onClick={() => handleCategoryChange(cat)}
+              className={`px-3 py-1 rounded-full text-xs font-medium transition-all shrink-0 cursor-pointer touch-manipulation active:scale-95 ${
+                isSelected
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                  : 'bg-white/[0.03] hover:bg-white/[0.08] text-zinc-400 hover:text-white border border-white/[0.06]'
+              }`}
+            >
+              {cat} ({count})
+            </button>
+          );
+        })}
+      </div>
 
       {/* Barra de Controles e Placar - Mobile Friendly */}
       <div className="bg-slate-900/80 border-b border-slate-800 px-3 sm:px-8 py-2.5 sm:py-3 shrink-0 backdrop-blur-md flex flex-wrap items-center justify-between gap-2.5">
@@ -110,7 +159,7 @@ export const FlashcardsB1View: React.FC<FlashcardsB1ViewProps> = ({ onBack }) =>
           </div>
 
           <span className="text-slate-400 font-mono hidden md:inline text-xs">
-            {knownCardIds.length + unknownCardIds.length}/{deck.length} estudados
+            {knownCardIds.length + unknownCardIds.length}/{deck.length} cartas avaliadas
           </span>
         </div>
 
@@ -164,10 +213,10 @@ export const FlashcardsB1View: React.FC<FlashcardsB1ViewProps> = ({ onBack }) =>
             </div>
 
             {/* Container da Carta com Flip 3D Fluido */}
-            <div className="w-full perspective-1000 min-h-[300px] sm:min-h-[330px]">
+            <div className="w-full perspective-1000 min-h-[300px] sm:min-h-[340px]">
               <div
                 onClick={() => setIsFlipped((prev) => !prev)}
-                className={`relative w-full h-full min-h-[300px] sm:min-h-[330px] transform-style-3d transition-transform duration-500 cursor-pointer select-none rounded-3xl ${
+                className={`relative w-full h-full min-h-[300px] sm:min-h-[340px] transform-style-3d transition-transform duration-500 cursor-pointer select-none rounded-3xl ${
                   isFlipped ? 'rotate-y-180' : ''
                 }`}
               >
@@ -175,7 +224,7 @@ export const FlashcardsB1View: React.FC<FlashcardsB1ViewProps> = ({ onBack }) =>
                 <div className="absolute inset-0 backface-hidden bg-slate-900 border-2 border-slate-800 hover:border-indigo-500/60 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col justify-between transition-colors">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-slate-950 border border-slate-800 text-slate-400">
-                      FRENTE (CONCEITO / QUESTÃO)
+                      FRENTE (CONCEITO / PERGUNTA)
                     </span>
                     <span className="text-xs text-indigo-400 font-medium flex items-center gap-1">
                       Toque para virar ↺
@@ -189,7 +238,7 @@ export const FlashcardsB1View: React.FC<FlashcardsB1ViewProps> = ({ onBack }) =>
                   </div>
 
                   <div className="text-center text-[11px] text-slate-500 font-medium">
-                    Toque no card para revelar a resposta e o motivo
+                    Toque no card para revelar a resposta oficial
                   </div>
                 </div>
 
@@ -197,7 +246,7 @@ export const FlashcardsB1View: React.FC<FlashcardsB1ViewProps> = ({ onBack }) =>
                 <div className="absolute inset-0 backface-hidden rotate-y-180 bg-slate-900 border-2 border-indigo-600/70 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-indigo-950/40 flex flex-col justify-between overflow-y-auto">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-950 border border-indigo-800 text-indigo-300">
-                      VERSO (GABARITO OFICIAL)
+                      VERSO (RESPOSTA & MOTIVO)
                     </span>
                     <span className="text-xs text-indigo-300 font-medium flex items-center gap-1">
                       Toque para voltar ↺
@@ -267,17 +316,28 @@ export const FlashcardsB1View: React.FC<FlashcardsB1ViewProps> = ({ onBack }) =>
           <div className="text-center p-8 bg-slate-900 border border-slate-800 rounded-3xl max-w-md animate-scale-up">
             <CheckCircle2 size={48} className="text-emerald-400 mx-auto mb-3" />
             <h3 className="text-lg font-bold text-white mb-2">
-              Todas as cartas foram dominadas!
+              Todas as cartas desta variedade foram dominadas!
             </h3>
             <p className="text-xs text-slate-400 mb-6">
-              Você não possui nenhuma carta pendente no filtro de &quot;Não sei&quot;.
+              Você não possui nenhuma carta pendente no filtro selecionado.
             </p>
-            <button
-              onClick={() => setOnlyUnknownMode(false)}
-              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-semibold text-xs transition-all cursor-pointer touch-manipulation"
-            >
-              Ver todas as cartas novamente
-            </button>
+            <div className="flex flex-col sm:flex-row gap-2.5 justify-center">
+              <button
+                onClick={() => setOnlyUnknownMode(false)}
+                className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-semibold text-xs transition-all cursor-pointer touch-manipulation"
+              >
+                Rever cartas desta variedade
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedCategory('Todas');
+                  setOnlyUnknownMode(false);
+                }}
+                className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-semibold text-xs transition-all cursor-pointer touch-manipulation"
+              >
+                Ver todas as 43 cartas
+              </button>
+            </div>
           </div>
         )}
       </div>

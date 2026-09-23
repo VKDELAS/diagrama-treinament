@@ -18,7 +18,7 @@ export const DEFAULT_SUBJECTS: SubjectItem[] = [
     badgeColor: 'bg-blue-950 text-blue-400 border-blue-800/80',
     modulesCount: 4,
     stats: {
-      flashcards: 20,
+      flashcards: 43,
       questions: 7,
       topics: 7,
       exercises: 52,
@@ -45,10 +45,10 @@ export const DEFAULT_SUBJECTS: SubjectItem[] = [
       {
         id: 'flashcards',
         title: 'Flashcards de Fixação da Matéria',
-        tag: '+20 Cartas Interativas',
+        tag: '43 Cartas • 7 Variedades',
         badge: 'Repetição Ativa',
         description:
-          'Flashcards exclusivos de Banco de Dados com frente e verso para memorizar gabaritos, cardinalidades e pegadinhas.',
+          '43 flashcards divididos em 7 variedades: Questões da Prova, Relacional vs NoSQL, Atributos & Chaves, Cardinalidades, Transformação Lógica, Pegadinhas e NoSQL na Prática.',
         available: true,
       },
       {
