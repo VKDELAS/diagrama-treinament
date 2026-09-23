@@ -69,10 +69,7 @@ export const HubView: React.FC<HubViewProps> = ({
   const totalCount = subjects.length;
 
   return (
-    <div className="w-screen h-screen overflow-y-auto bg-[#080b11] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600/30 relative">
-      {/* Luz ambiente de fundo (Aura suave moderna) */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-600/10 via-indigo-900/5 to-transparent pointer-events-none -z-10" />
-
+    <div className="w-screen h-screen overflow-y-auto bg-[#080b11]/75 backdrop-blur-[1px] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600/30 relative z-10">
       {/* Header Minimalista Estilo Linear/Raycast */}
       <HubHeader
         searchQuery={searchQuery}

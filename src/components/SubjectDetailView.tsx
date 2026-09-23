@@ -83,7 +83,7 @@ export const SubjectDetailView: React.FC<SubjectDetailViewProps> = ({
   };
 
   return (
-    <div className="w-screen h-screen overflow-y-auto bg-[#080b11] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600/30">
+    <div className="w-screen h-screen overflow-y-auto bg-[#080b11]/75 backdrop-blur-[1px] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600/30 relative z-10">
       {/* Header Superior Minimalista com Breadcrumb */}
       <header className="sticky top-0 z-40 w-full border-b border-white/[0.07] bg-[#080b11]/85 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto h-14 px-3 sm:px-6 flex items-center justify-between gap-3">
