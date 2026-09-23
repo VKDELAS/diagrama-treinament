@@ -8,6 +8,7 @@ interface ModuleHeaderProps {
   badge?: string;
   icon: LucideIcon;
   badgeColor?: string;
+  backLabel?: string;
   onBack: () => void;
 }
 
@@ -17,19 +18,20 @@ export const ModuleHeader: React.FC<ModuleHeaderProps> = ({
   badge = 'B1 • BANCO DE DADOS',
   icon: Icon,
   badgeColor = 'bg-blue-900/60 border-blue-700/60 text-blue-300',
+  backLabel = 'Voltar',
   onBack,
 }) => {
   return (
     <header className="w-full min-h-[56px] bg-slate-900/95 border-b border-slate-800 px-3 sm:px-6 py-2.5 flex items-center justify-between z-40 select-none backdrop-blur-md shrink-0 gap-3">
       <div className="flex items-center gap-2 sm:gap-4">
-        {/* Botão de retorno padronizado para a Página Principal */}
+        {/* Botão de retorno padronizado */}
         <button
           onClick={onBack}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 hover:text-white border border-slate-700 text-xs sm:text-sm font-semibold transition-all cursor-pointer shadow-sm touch-manipulation"
-          title="Voltar à Página Principal (Hub)"
+          title="Voltar"
         >
           <ArrowLeft size={16} className="text-blue-400" />
-          <span>Voltar ao início</span>
+          <span>{backLabel}</span>
         </button>
 
         <div className="h-5 w-px bg-slate-800 hidden xs:block" />

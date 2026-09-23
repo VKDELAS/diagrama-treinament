@@ -48,11 +48,10 @@ export const Header: React.FC<HeaderProps> = ({ onBackToHub }) => {
             <button
               onClick={onBackToHub}
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 hover:text-white border border-slate-700 text-xs font-semibold transition-all cursor-pointer touch-manipulation shadow-sm"
-              title="Voltar à Página Principal (Hub)"
+              title="Voltar"
             >
               <ArrowLeft size={16} className="text-blue-400" />
-              <span className="hidden sm:inline">Voltar ao início</span>
-              <span className="sm:hidden">Início</span>
+              <span>Voltar</span>
             </button>
           )}
 
