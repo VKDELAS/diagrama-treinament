@@ -10,12 +10,17 @@ import {
   BookOpen,
   Award,
   Sparkles,
+  ArrowLeft,
 } from 'lucide-react';
 import { ClassSummaryModal } from './ClassSummaryModal';
 import { ExercisePickerModal } from './ExercisePickerModal';
 import { SimuladoModal, type SimuladoTab } from './SimuladoModal';
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  onBackToHub?: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ onBackToHub }) => {
   const {
     exercises,
     currentExerciseIndex,
@@ -39,6 +44,18 @@ export const Header: React.FC = () => {
       <header className="w-full min-h-[52px] h-14 bg-slate-900/98 border-b border-slate-800 px-3 sm:px-4 flex items-center justify-between z-40 select-none backdrop-blur-md gap-2">
         {/* Logo e Nome da Aplicação */}
         <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+          {onBackToHub && (
+            <button
+              onClick={onBackToHub}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 hover:text-white border border-slate-700 text-xs font-semibold transition-all cursor-pointer touch-manipulation shadow-sm"
+              title="Voltar à Página Principal (Hub)"
+            >
+              <ArrowLeft size={16} className="text-blue-400" />
+              <span className="hidden sm:inline">Voltar ao início</span>
+              <span className="sm:hidden">Início</span>
+            </button>
+          )}
+
           <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/20 text-white font-bold shrink-0">
             <FileCode2 size={18} />
           </div>
