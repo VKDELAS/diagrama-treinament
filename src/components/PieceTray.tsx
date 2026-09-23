@@ -32,7 +32,7 @@ export const PieceTray: React.FC = () => {
 
   return (
     <>
-      <div className="w-full bg-slate-900/98 border-t border-slate-800 shadow-[0_-10px_30px_rgba(0,0,0,0.6)] px-3 sm:px-5 py-2.5 z-30 flex flex-col gap-2">
+      <div className="w-full bg-slate-900/98 border-t border-slate-800 shadow-[0_-10px_30px_rgba(0,0,0,0.6)] px-3 sm:px-5 py-2.5 pb-safe z-30 flex flex-col gap-2">
         {/* Linha Principal de Peças e Ações */}
         <div className="flex flex-wrap items-center justify-between gap-2.5">
           {/* Peças Genéricas (Mecânica brModelo: solte e renomeie) */}

@@ -116,8 +116,8 @@ export const SimuladoView: React.FC<SimuladoViewProps> = ({ onBack }) => {
                   />
                 </div>
 
-                {/* Marcadores de Navegação Rápida (1 a 7) */}
-                <div className="flex items-center gap-2 mt-4 overflow-x-auto pb-1">
+                {/* Marcadores de Navegação Rápida (1 a 7) - Otimizado para Mobile */}
+                <div className="flex items-center gap-2 mt-4 overflow-x-auto pb-1 no-scrollbar touch-manipulation">
                   {SIMULADO_QUESTIONS.map((q, idx) => {
                     const isAnswered = selectedAnswers[q.id] !== undefined;
                     const isCurrent = idx === currentIndex;
@@ -125,7 +125,7 @@ export const SimuladoView: React.FC<SimuladoViewProps> = ({ onBack }) => {
                       <button
                         key={q.id}
                         onClick={() => setCurrentIndex(idx)}
-                        className={`w-8 h-8 rounded-xl font-mono text-xs font-bold transition-all cursor-pointer flex items-center justify-center shrink-0 ${
+                        className={`w-9 h-9 sm:w-8 sm:h-8 rounded-xl font-mono text-xs font-bold transition-all cursor-pointer flex items-center justify-center shrink-0 touch-manipulation active:scale-95 ${
                           isCurrent
                             ? 'bg-blue-600 text-white ring-2 ring-blue-400'
                             : isAnswered
@@ -140,15 +140,15 @@ export const SimuladoView: React.FC<SimuladoViewProps> = ({ onBack }) => {
                 </div>
               </div>
 
-              {/* Cartão da Questão Atual */}
-              <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-5 sm:p-7 shadow-xl">
+              {/* Cartão da Questão Atual com animação */}
+              <div className="bg-slate-900/90 border border-slate-800 rounded-3xl p-4 sm:p-7 shadow-xl animate-fade-in">
                 {/* Assunto e Tópico */}
                 <div className="mb-4">
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-950 border border-blue-800 text-blue-300 text-[11px] font-mono font-semibold mb-2">
                     <HelpCircle size={14} />
                     <span>{currentQuestion.assunto}</span>
                   </div>
-                  <h2 className="text-base sm:text-lg font-bold text-white leading-relaxed whitespace-pre-line">
+                  <h2 className="text-sm sm:text-lg font-bold text-white leading-relaxed whitespace-pre-line">
                     {currentQuestion.enunciado}
                   </h2>
                 </div>
@@ -170,7 +170,7 @@ export const SimuladoView: React.FC<SimuladoViewProps> = ({ onBack }) => {
                       <button
                         key={alt.id}
                         onClick={() => handleSelectOption(alt.id)}
-                        className={`w-full text-left p-4 rounded-2xl border transition-all flex items-start gap-3.5 cursor-pointer ${
+                        className={`w-full text-left p-3.5 sm:p-4 min-h-[48px] rounded-2xl border transition-all flex items-start gap-3.5 cursor-pointer touch-manipulation active:scale-[0.99] ${
                           isSelected
                             ? 'bg-blue-950/60 border-blue-500 shadow-md shadow-blue-500/20 text-white ring-1 ring-blue-500/50'
                             : 'bg-slate-950/60 border-slate-800 text-slate-300 hover:bg-slate-800/50 hover:border-slate-700'

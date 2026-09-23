@@ -3,11 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='7' r='4'/><path d='M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2'/></svg>" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="description" content="Plataforma de treino e validação interativa de Diagramas de Casos de Uso (UML) estilo brModelo com React Flow." />
-    <title>Treino UML • Diagrama de Casos de Uso</title>
+    
+    <!-- Configurações Responsivas Mobile e Safe Area -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#080b11" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Nexus ADS" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- Cabeçalhos de Segurança (CSP, Anti-Sniffing, Anti-Clickjacking, Privacidade) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self';" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()" />
+
+    <meta name="description" content="Portal de Estudos ADS (NEXUS) - Preparatório oficial para provas, com flashcards inteligentes, simulados comentados, resumos teóricos e treino interativo de diagramas." />
+    <title>NEXUS • Portal de Estudos ADS</title>
   </head>
-  <body class="bg-[#090d16] text-slate-100 antialiased selection:bg-blue-600 selection:text-white">
+  <body class="bg-[#080b11] text-slate-100 antialiased selection:bg-blue-600 selection:text-white overscroll-none">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

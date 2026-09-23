@@ -84,7 +84,7 @@ export const FlashcardsB1View: React.FC<FlashcardsB1ViewProps> = ({ onBack }) =>
   };
 
   return (
-    <div className="w-screen h-screen flex flex-col overflow-hidden bg-[#090d16] text-slate-100 font-sans antialiased selection:bg-indigo-600/30">
+    <div className="w-screen h-screen flex flex-col overflow-hidden bg-[#080b11] text-slate-100 font-sans antialiased selection:bg-indigo-600/30">
       {/* Cabeçalho do Módulo */}
       <ModuleHeader
         title="Flashcards de Fixação B1"
@@ -95,132 +95,150 @@ export const FlashcardsB1View: React.FC<FlashcardsB1ViewProps> = ({ onBack }) =>
         onBack={onBack}
       />
 
-      {/* Barra de Controles e Placar */}
-      <div className="bg-slate-900/80 border-b border-slate-800 px-4 sm:px-8 py-3 shrink-0 backdrop-blur-md flex flex-wrap items-center justify-between gap-3">
+      {/* Barra de Controles e Placar - Mobile Friendly */}
+      <div className="bg-slate-900/80 border-b border-slate-800 px-3 sm:px-8 py-2.5 sm:py-3 shrink-0 backdrop-blur-md flex flex-wrap items-center justify-between gap-2.5">
         {/* Contadores */}
-        <div className="flex items-center gap-3 text-xs sm:text-sm font-semibold">
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-950/80 border border-emerald-800 text-emerald-300">
-            <CheckCircle2 size={15} />
+        <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm font-semibold">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-950/80 border border-emerald-800 text-emerald-300">
+            <CheckCircle2 size={14} />
             <span>Sei: {knownCardIds.length}</span>
           </div>
 
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-300">
-            <XCircle size={15} />
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-300">
+            <XCircle size={14} />
             <span>Não sei: {unknownCardIds.length}</span>
           </div>
 
-          <span className="text-slate-400 font-mono hidden sm:inline">
-            Total estudado: {knownCardIds.length + unknownCardIds.length}/{deck.length}
+          <span className="text-slate-400 font-mono hidden md:inline text-xs">
+            {knownCardIds.length + unknownCardIds.length}/{deck.length} estudados
           </span>
         </div>
 
-        {/* Botões de Ação */}
-        <div className="flex items-center gap-2">
+        {/* Botões de Ação com Toque Otimizado */}
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <button
             onClick={toggleOnlyUnknown}
             disabled={unknownCardIds.length === 0 && !onlyUnknownMode}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border touch-manipulation active:scale-95 ${
               onlyUnknownMode
-                ? 'bg-rose-950 border-rose-700 text-rose-300'
+                ? 'bg-rose-950 border-rose-700 text-rose-300 shadow-md'
                 : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700 disabled:opacity-40 disabled:pointer-events-none'
             }`}
             title="Estudar somente as cartas marcadas como Não Sei"
           >
-            <Filter size={14} />
-            <span>{onlyUnknownMode ? 'Ver Todas' : 'Estudar só "Não sei"'}</span>
+            <Filter size={13} />
+            <span>{onlyUnknownMode ? 'Ver Todas' : 'Só "Não sei"'}</span>
           </button>
 
           <button
             onClick={handleShuffle}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-semibold transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 border border-slate-700 text-xs font-semibold transition-all cursor-pointer touch-manipulation"
             title="Embaralhar as cartas"
           >
-            <Shuffle size={14} />
+            <Shuffle size={13} />
             <span className="hidden sm:inline">Embaralhar</span>
           </button>
 
           <button
             onClick={handleResetProgress}
-            className="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700 transition-all cursor-pointer"
-            title="Zerar pontuação"
+            className="p-1.5 sm:p-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-400 hover:text-white border border-slate-700 transition-all cursor-pointer touch-manipulation"
+            title="Zerar progresso"
           >
-            <RotateCcw size={15} />
+            <RotateCcw size={14} />
           </button>
         </div>
       </div>
 
-      {/* Área Central com o Flashcard */}
+      {/* Área Central com o Flashcard 3D */}
       <div className="flex-1 overflow-y-auto p-4 sm:p-8 flex flex-col items-center justify-center">
         {totalCards > 0 && currentCard ? (
           <div className="w-full max-w-xl flex flex-col items-center">
             {/* Indicador de Posição da Carta */}
             <div className="flex items-center justify-between w-full mb-3 px-2 text-xs font-mono text-slate-400">
-              <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-indigo-300 font-bold">
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-indigo-300 font-bold text-[11px]">
                 {currentCard.categoria}
               </span>
-              <span>
+              <span className="text-[11px] font-medium text-zinc-400">
                 Carta {currentIndex + 1} de {totalCards}
               </span>
             </div>
 
-            {/* Carta com Efeito Flip / Frente e Verso */}
-            <div
-              onClick={() => setIsFlipped((prev) => !prev)}
-              className="w-full min-h-[290px] sm:min-h-[320px] bg-slate-900 border-2 border-slate-800 hover:border-indigo-500/60 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col justify-between cursor-pointer transition-all duration-300 transform select-none relative group"
-            >
-              {/* Badge indicando o lado atual */}
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-slate-950 border border-slate-800 text-slate-400">
-                  {isFlipped ? 'VERSO (RESPOSTA + MOTIVO)' : 'FRENTE (CONCEITO / PERGUNTA)'}
-                </span>
+            {/* Container da Carta com Flip 3D Fluido */}
+            <div className="w-full perspective-1000 min-h-[300px] sm:min-h-[330px]">
+              <div
+                onClick={() => setIsFlipped((prev) => !prev)}
+                className={`relative w-full h-full min-h-[300px] sm:min-h-[330px] transform-style-3d transition-transform duration-500 cursor-pointer select-none rounded-3xl ${
+                  isFlipped ? 'rotate-y-180' : ''
+                }`}
+              >
+                {/* Lado FRENTE */}
+                <div className="absolute inset-0 backface-hidden bg-slate-900 border-2 border-slate-800 hover:border-indigo-500/60 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col justify-between transition-colors">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-slate-950 border border-slate-800 text-slate-400">
+                      FRENTE (CONCEITO / QUESTÃO)
+                    </span>
+                    <span className="text-xs text-indigo-400 font-medium flex items-center gap-1">
+                      Toque para virar ↺
+                    </span>
+                  </div>
 
-                <span className="text-xs text-indigo-400 font-medium group-hover:text-indigo-300 flex items-center gap-1">
-                  Clique para virar ↺
-                </span>
-              </div>
+                  <div className="my-auto py-4">
+                    <h3 className="text-base sm:text-xl font-bold text-white leading-relaxed text-center">
+                      {currentCard.frente}
+                    </h3>
+                  </div>
 
-              {/* Conteúdo da Carta */}
-              <div className="my-auto py-4">
-                {!isFlipped ? (
-                  <h3 className="text-lg sm:text-xl font-bold text-white leading-relaxed text-center">
-                    {currentCard.frente}
-                  </h3>
-                ) : (
-                  <div className="space-y-4 text-center">
-                    <div className="p-3 rounded-2xl bg-indigo-950/60 border border-indigo-800/80">
-                      <p className="text-base sm:text-lg font-extrabold text-indigo-200 leading-snug">
+                  <div className="text-center text-[11px] text-slate-500 font-medium">
+                    Toque no card para revelar a resposta e o motivo
+                  </div>
+                </div>
+
+                {/* Lado VERSO */}
+                <div className="absolute inset-0 backface-hidden rotate-y-180 bg-slate-900 border-2 border-indigo-600/70 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-indigo-950/40 flex flex-col justify-between overflow-y-auto">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-950 border border-indigo-800 text-indigo-300">
+                      VERSO (GABARITO OFICIAL)
+                    </span>
+                    <span className="text-xs text-indigo-300 font-medium flex items-center gap-1">
+                      Toque para voltar ↺
+                    </span>
+                  </div>
+
+                  <div className="my-auto py-3 space-y-3">
+                    <div className="p-3 sm:p-3.5 rounded-2xl bg-indigo-950/80 border border-indigo-700/60 text-center">
+                      <p className="text-sm sm:text-base font-extrabold text-indigo-200 leading-snug">
                         {currentCard.verso}
                       </p>
                     </div>
 
-                    <div className="p-3 rounded-2xl bg-slate-950/80 border border-slate-800/80 text-xs sm:text-sm text-slate-300 leading-relaxed text-left">
+                    <div className="p-3 rounded-2xl bg-slate-950/90 border border-slate-800/90 text-xs sm:text-sm text-slate-300 leading-relaxed text-left">
                       <strong className="text-amber-400">Por quê?</strong>{' '}
                       {currentCard.motivo}
                     </div>
                   </div>
-                )}
-              </div>
 
-              {/* Dica de rodapé do card */}
-              <div className="text-center text-[11px] text-slate-500">
-                Toque no card para alternar frente e verso
+                  <div className="text-center text-[11px] text-slate-500 font-medium">
+                    Avalie abaixo se você dominou esta carta
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Controles Inferiores: Anterior / Sei / Não Sei / Próxima */}
-            <div className="w-full mt-6 flex flex-wrap items-center justify-between gap-3">
+            {/* Controles Inferiores Grandes para Celular */}
+            <div className="w-full mt-5 flex items-center justify-between gap-2.5">
               <button
                 onClick={handlePrev}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 text-xs sm:text-sm font-semibold transition-all cursor-pointer"
+                className="flex items-center justify-center gap-1 px-3 sm:px-4 py-2.5 min-h-[44px] rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 text-xs sm:text-sm font-semibold transition-all cursor-pointer touch-manipulation"
+                aria-label="Carta anterior"
               >
-                <ChevronLeft size={18} />
-                <span>Anterior</span>
+                <ChevronLeft size={16} />
+                <span className="hidden xs:inline">Anterior</span>
               </button>
 
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => handleMarkUnknown(currentCard.id)}
-                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-rose-950 hover:bg-rose-900 border border-rose-700/80 active:scale-95 text-rose-200 text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-md"
+                  className="flex items-center gap-1.5 px-3.5 sm:px-5 py-2.5 min-h-[44px] rounded-xl bg-rose-950 hover:bg-rose-900 border border-rose-700/80 active:scale-95 text-rose-200 text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-md touch-manipulation"
                 >
                   <XCircle size={16} />
                   <span>Não sei</span>
@@ -228,34 +246,35 @@ export const FlashcardsB1View: React.FC<FlashcardsB1ViewProps> = ({ onBack }) =>
 
                 <button
                   onClick={() => handleMarkKnown(currentCard.id)}
-                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-950 hover:bg-emerald-900 border border-emerald-700/80 active:scale-95 text-emerald-200 text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-md"
+                  className="flex items-center gap-1.5 px-3.5 sm:px-5 py-2.5 min-h-[44px] rounded-xl bg-emerald-950 hover:bg-emerald-900 border border-emerald-700/80 active:scale-95 text-emerald-200 text-xs sm:text-sm font-bold transition-all cursor-pointer shadow-md touch-manipulation"
                 >
                   <CheckCircle2 size={16} />
-                  <span>Sei</span>
+                  <span>Sei!</span>
                 </button>
               </div>
 
               <button
                 onClick={handleNext}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white text-xs sm:text-sm font-semibold transition-all cursor-pointer shadow-md shadow-indigo-600/30"
+                className="flex items-center justify-center gap-1 px-3 sm:px-4 py-2.5 min-h-[44px] rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white text-xs sm:text-sm font-semibold transition-all cursor-pointer shadow-md shadow-indigo-600/30 touch-manipulation"
+                aria-label="Próxima carta"
               >
-                <span>Próxima</span>
-                <ChevronRight size={18} />
+                <span className="hidden xs:inline">Próxima</span>
+                <ChevronRight size={16} />
               </button>
             </div>
           </div>
         ) : (
-          <div className="text-center p-8 bg-slate-900 border border-slate-800 rounded-3xl max-w-md">
+          <div className="text-center p-8 bg-slate-900 border border-slate-800 rounded-3xl max-w-md animate-scale-up">
             <CheckCircle2 size={48} className="text-emerald-400 mx-auto mb-3" />
             <h3 className="text-lg font-bold text-white mb-2">
               Todas as cartas foram dominadas!
             </h3>
             <p className="text-xs text-slate-400 mb-6">
-              Você não possui nenhuma carta pendente no filtro de "Não sei".
+              Você não possui nenhuma carta pendente no filtro de &quot;Não sei&quot;.
             </p>
             <button
               onClick={() => setOnlyUnknownMode(false)}
-              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition-all cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-semibold text-xs transition-all cursor-pointer touch-manipulation"
             >
               Ver todas as cartas novamente
             </button>

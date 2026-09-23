@@ -69,7 +69,10 @@ export const HubView: React.FC<HubViewProps> = ({
   const totalCount = subjects.length;
 
   return (
-    <div className="w-screen h-screen overflow-y-auto bg-[#080b11] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600/30">
+    <div className="w-screen h-screen overflow-y-auto bg-[#080b11] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600/30 relative">
+      {/* Luz ambiente de fundo (Aura suave moderna) */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-600/10 via-indigo-900/5 to-transparent pointer-events-none -z-10" />
+
       {/* Header Minimalista Estilo Linear/Raycast */}
       <HubHeader
         searchQuery={searchQuery}
@@ -79,39 +82,39 @@ export const HubView: React.FC<HubViewProps> = ({
       />
 
       {/* Conteúdo Principal do Hub */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col">
-        {/* Hero Minimalista */}
-        <div className="max-w-3xl mb-8 sm:mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-zinc-300 text-xs font-medium mb-3">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 py-6 sm:py-10 flex flex-col">
+        {/* Hero Minimalista com animação de entrada */}
+        <div className="max-w-3xl mb-6 sm:mb-9 animate-fade-in">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-zinc-300 text-xs font-medium mb-2.5 shadow-sm">
             <Layers3 size={13} className="text-blue-400" />
-            <span>Grade Curricular Unificada</span>
+            <span>Grade Curricular ADS</span>
           </div>
 
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
             Matérias & Disciplinas
           </h1>
-          <p className="mt-2 text-sm sm:text-base text-zinc-400 leading-relaxed">
+          <p className="mt-2 text-xs sm:text-base text-zinc-400 leading-relaxed">
             Selecione uma matéria para acessar seus flashcards exclusivos, resumo
             teórico, simulado oficial e exercícios práticos.
           </p>
         </div>
 
-        {/* Barra de Filtros Segmentados */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-white/[0.06]">
-          <div className="inline-flex p-1 rounded-xl bg-white/[0.03] border border-white/[0.07]">
+        {/* Barra de Filtros Segmentados - 100% Mobile Friendly com scroll suave */}
+        <div className="flex items-center justify-between gap-3 mb-6 pb-3 border-b border-white/[0.06] overflow-x-auto no-scrollbar">
+          <div className="inline-flex p-1 rounded-xl bg-white/[0.03] border border-white/[0.07] shrink-0">
             <button
               onClick={() => setSelectedFilter('all')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer touch-manipulation ${
                 selectedFilter === 'all'
                   ? 'bg-white/[0.1] text-white shadow-sm'
                   : 'text-zinc-400 hover:text-zinc-200'
               }`}
             >
-              Todas as Matérias ({totalCount})
+              Todas ({totalCount})
             </button>
             <button
               onClick={() => setSelectedFilter('available')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer touch-manipulation flex items-center gap-1.5 ${
                 selectedFilter === 'available'
                   ? 'bg-white/[0.1] text-white shadow-sm'
                   : 'text-zinc-400 hover:text-zinc-200'
@@ -122,7 +125,7 @@ export const HubView: React.FC<HubViewProps> = ({
             </button>
             <button
               onClick={() => setSelectedFilter('upcoming')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer touch-manipulation ${
                 selectedFilter === 'upcoming'
                   ? 'bg-white/[0.1] text-white shadow-sm'
                   : 'text-zinc-400 hover:text-zinc-200'
@@ -132,14 +135,14 @@ export const HubView: React.FC<HubViewProps> = ({
             </button>
           </div>
 
-          <span className="text-xs text-zinc-500 hidden sm:inline">
+          <span className="text-xs text-zinc-500 hidden sm:inline shrink-0">
             Mostrando {filteredSubjects.length} {filteredSubjects.length === 1 ? 'matéria' : 'matérias'}
           </span>
         </div>
 
-        {/* Grade de Matérias */}
+        {/* Grade de Matérias com Animação Fluida */}
         {filteredSubjects.length === 0 ? (
-          <div className="text-center py-16 px-4 border border-dashed border-white/[0.08] rounded-3xl bg-white/[0.01]">
+          <div className="text-center py-16 px-4 border border-dashed border-white/[0.08] rounded-3xl bg-white/[0.01] animate-fade-in">
             <Search size={32} className="mx-auto text-zinc-500 mb-3" />
             <h3 className="text-base font-semibold text-white">
               Nenhuma matéria encontrada
@@ -149,23 +152,24 @@ export const HubView: React.FC<HubViewProps> = ({
             </p>
             <button
               onClick={() => setSearchQuery('')}
-              className="mt-4 px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.1] text-xs font-medium text-zinc-200 transition-colors cursor-pointer"
+              className="mt-4 px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] active:scale-95 text-xs font-medium text-zinc-200 transition-all cursor-pointer touch-manipulation"
             >
               Limpar busca
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5 sm:gap-6">
-            {filteredSubjects.map((subject) => {
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            {filteredSubjects.map((subject, index) => {
               const Icon = getSubjectIcon(subject.id);
               const isAvailable = subject.status === 'available';
 
               return (
                 <div
                   key={subject.id}
-                  className={`group relative text-left bg-gradient-to-br ${subject.gradient} border border-white/[0.08] rounded-3xl p-6 sm:p-7 transition-all duration-200 ${
+                  style={{ animationDelay: `${index * 60}ms` }}
+                  className={`group relative text-left bg-gradient-to-br ${subject.gradient} border border-white/[0.08] rounded-3xl p-5 sm:p-7 transition-all duration-300 animate-fade-in ${
                     isAvailable
-                      ? `${subject.borderHover} hover:shadow-2xl hover:shadow-blue-950/40 hover:-translate-y-1`
+                      ? `${subject.borderHover} hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1`
                       : 'opacity-85 hover:border-white/[0.15]'
                   } flex flex-col justify-between`}
                 >
@@ -174,9 +178,9 @@ export const HubView: React.FC<HubViewProps> = ({
                     <div className="flex items-center justify-between gap-3 mb-4">
                       <div className="flex items-center gap-3">
                         <div
-                          className={`w-12 h-12 rounded-2xl border flex items-center justify-center ${subject.iconBg} shadow-inner transition-transform group-hover:scale-105`}
+                          className={`w-11 h-11 sm:w-12 sm:h-12 rounded-2xl border flex items-center justify-center ${subject.iconBg} shadow-inner transition-transform duration-300 group-hover:scale-105`}
                         >
-                          <Icon size={22} />
+                          <Icon size={20} className="sm:size-[22px]" />
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
@@ -195,12 +199,12 @@ export const HubView: React.FC<HubViewProps> = ({
 
                       {/* Status Badge */}
                       {isAvailable ? (
-                        <span className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-full bg-emerald-950/80 border border-emerald-800/60 text-emerald-400">
+                        <span className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-full bg-emerald-950/80 border border-emerald-800/60 text-emerald-400 shrink-0">
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                           <span>Disponível</span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] text-zinc-400">
+                        <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-full bg-white/[0.03] border border-white/[0.08] text-zinc-400 shrink-0">
                           <Clock size={11} />
                           <span>Em Breve</span>
                         </span>
@@ -210,7 +214,7 @@ export const HubView: React.FC<HubViewProps> = ({
                     {/* Título e Descrição */}
                     <h2
                       onClick={() => onSelectSubject(subject)}
-                      className="text-lg sm:text-xl font-bold text-white group-hover:text-blue-300 transition-colors cursor-pointer"
+                      className="text-base sm:text-xl font-bold text-white group-hover:text-blue-300 transition-colors cursor-pointer"
                     >
                       {subject.title}
                     </h2>
@@ -243,13 +247,13 @@ export const HubView: React.FC<HubViewProps> = ({
                     </div>
                   </div>
 
-                  {/* Rodapé do Card com Ações */}
+                  {/* Rodapé do Card com Ações Otimizadas para Celular */}
                   <div className="mt-6 pt-4 border-t border-white/[0.07] flex flex-col xs:flex-row items-stretch xs:items-center justify-between gap-3">
                     <button
                       onClick={() => onSelectSubject(subject)}
-                      className={`flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                      className={`flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[40px] rounded-xl text-xs font-semibold transition-all cursor-pointer touch-manipulation active:scale-95 ${
                         isAvailable
-                          ? 'bg-blue-600 hover:bg-blue-500 active:scale-95 text-white shadow-lg shadow-blue-600/30'
+                          ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/30'
                           : 'bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 border border-white/[0.08]'
                       }`}
                     >
@@ -257,36 +261,40 @@ export const HubView: React.FC<HubViewProps> = ({
                       <ArrowRight size={14} />
                     </button>
 
-                    {/* Atalhos Rápidos se disponível */}
+                    {/* Atalhos Rápidos se disponível com toque confortável */}
                     {isAvailable && (
                       <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => onQuickLaunchModule(subject, 'flashcards')}
-                          className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.09] border border-white/[0.08] text-zinc-300 hover:text-white transition-all cursor-pointer"
+                          className="min-h-[38px] min-w-[38px] flex items-center justify-center rounded-xl bg-white/[0.04] hover:bg-white/[0.09] active:scale-95 border border-white/[0.08] text-zinc-300 hover:text-white transition-all cursor-pointer touch-manipulation"
                           title="Abrir Flashcards desta matéria"
+                          aria-label="Abrir Flashcards"
                         >
-                          <Sparkles size={14} className="text-indigo-400" />
+                          <Sparkles size={16} className="text-indigo-400" />
                         </button>
                         <button
                           onClick={() => onQuickLaunchModule(subject, 'simulado')}
-                          className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.09] border border-white/[0.08] text-zinc-300 hover:text-white transition-all cursor-pointer"
+                          className="min-h-[38px] min-w-[38px] flex items-center justify-center rounded-xl bg-white/[0.04] hover:bg-white/[0.09] active:scale-95 border border-white/[0.08] text-zinc-300 hover:text-white transition-all cursor-pointer touch-manipulation"
                           title="Abrir Simulado desta matéria"
+                          aria-label="Abrir Simulado"
                         >
-                          <Award size={14} className="text-emerald-400" />
+                          <Award size={16} className="text-emerald-400" />
                         </button>
                         <button
                           onClick={() => onQuickLaunchModule(subject, 'resumo')}
-                          className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.09] border border-white/[0.08] text-zinc-300 hover:text-white transition-all cursor-pointer"
+                          className="min-h-[38px] min-w-[38px] flex items-center justify-center rounded-xl bg-white/[0.04] hover:bg-white/[0.09] active:scale-95 border border-white/[0.08] text-zinc-300 hover:text-white transition-all cursor-pointer touch-manipulation"
                           title="Abrir Resumo Teórico desta matéria"
+                          aria-label="Abrir Resumo Teórico"
                         >
-                          <BookOpen size={14} className="text-blue-400" />
+                          <BookOpen size={16} className="text-blue-400" />
                         </button>
                         <button
                           onClick={() => onQuickLaunchModule(subject, 'diagramas')}
-                          className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.09] border border-white/[0.08] text-zinc-300 hover:text-white transition-all cursor-pointer"
+                          className="min-h-[38px] min-w-[38px] flex items-center justify-center rounded-xl bg-white/[0.04] hover:bg-white/[0.09] active:scale-95 border border-white/[0.08] text-zinc-300 hover:text-white transition-all cursor-pointer touch-manipulation"
                           title="Abrir Treino de Diagramas desta matéria"
+                          aria-label="Abrir Treino de Diagramas"
                         >
-                          <Layers size={14} className="text-amber-400" />
+                          <Layers size={16} className="text-amber-400" />
                         </button>
                       </div>
                     )}
@@ -298,14 +306,14 @@ export const HubView: React.FC<HubViewProps> = ({
         )}
       </main>
 
-      {/* Rodapé Minimalista */}
-      <footer className="w-full border-t border-white/[0.06] py-5 px-4 text-center text-xs text-zinc-500 flex flex-col sm:flex-row items-center justify-between max-w-7xl mx-auto gap-2">
+      {/* Rodapé Minimalista com Safe Area */}
+      <footer className="w-full border-t border-white/[0.06] py-5 px-4 text-center text-xs text-zinc-500 flex flex-col sm:flex-row items-center justify-between max-w-7xl mx-auto gap-2 pb-safe">
         <div className="flex items-center gap-2">
           <span className="font-semibold text-zinc-400">NEXUS</span>
           <span className="text-zinc-600">•</span>
           <span>Portal de Estudos Multi-Matérias</span>
         </div>
-        <p>Desenvolvido para máxima fixação e preparação de provas</p>
+        <p className="text-[11px] sm:text-xs">Desenvolvido para máxima fixação e preparação de provas</p>
       </footer>
     </div>
   );

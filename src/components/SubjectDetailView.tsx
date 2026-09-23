@@ -86,42 +86,43 @@ export const SubjectDetailView: React.FC<SubjectDetailViewProps> = ({
     <div className="w-screen h-screen overflow-y-auto bg-[#080b11] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600/30">
       {/* Header Superior Minimalista com Breadcrumb */}
       <header className="sticky top-0 z-40 w-full border-b border-white/[0.07] bg-[#080b11]/85 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto h-14 px-4 sm:px-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="max-w-7xl mx-auto h-14 px-3 sm:px-6 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <button
               onClick={onBackToHub}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] active:scale-95 border border-white/[0.08] text-xs font-medium text-zinc-300 hover:text-white transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] active:scale-95 border border-white/[0.08] text-xs font-medium text-zinc-300 hover:text-white transition-all cursor-pointer touch-manipulation shrink-0"
               title="Voltar ao Hub de Matérias"
             >
               <ArrowLeft size={14} className="text-blue-400" />
-              <span>Todas as Matérias</span>
+              <span className="hidden xs:inline">Todas as Matérias</span>
+              <span className="xs:hidden">Matérias</span>
             </button>
 
             <span className="text-zinc-600 font-mono text-xs hidden sm:inline">/</span>
 
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-white tracking-wide truncate max-w-[200px] sm:max-w-none">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="text-xs font-semibold text-white tracking-wide truncate">
                 {subject.title}
               </span>
-              <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-blue-950/80 border border-blue-800/80 text-blue-400 font-semibold hidden md:inline">
+              <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-blue-950/80 border border-blue-800/80 text-blue-400 font-semibold hidden md:inline shrink-0">
                 {subject.code}
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] text-zinc-400 hidden sm:inline">
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-[11px] text-zinc-400">
               Semestre {subject.semester}
             </span>
           </div>
         </div>
       </header>
 
-      {/* Conteúdo da Matéria */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-8 py-8 sm:py-12 flex flex-col justify-center">
+      {/* Conteúdo da Matéria com animação suave de entrada */}
+      <main className="flex-1 max-w-6xl w-full mx-auto px-3.5 sm:px-8 py-6 sm:py-10 flex flex-col justify-center animate-fade-in">
         {/* Banner da Matéria */}
-        <div className="max-w-3xl mb-8 sm:mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-medium text-zinc-300 mb-3">
+        <div className="max-w-3xl mb-6 sm:mb-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-medium text-zinc-300 mb-2.5">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             <span>Módulos de Estudo da Matéria</span>
           </div>
@@ -129,7 +130,7 @@ export const SubjectDetailView: React.FC<SubjectDetailViewProps> = ({
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
             {subject.title}
           </h1>
-          <p className="mt-2.5 text-sm sm:text-base text-zinc-400 leading-relaxed">
+          <p className="mt-2 text-xs sm:text-base text-zinc-400 leading-relaxed">
             {subject.description}
           </p>
 
@@ -159,7 +160,7 @@ export const SubjectDetailView: React.FC<SubjectDetailViewProps> = ({
 
         {/* Grade dos Módulos Desta Matéria */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          {subject.modules.map((module) => {
+          {subject.modules.map((module, index) => {
             const Icon = getModuleIcon(module.id);
             const colors = getModuleColor(module.id);
             const isClickable = module.available;
@@ -167,23 +168,24 @@ export const SubjectDetailView: React.FC<SubjectDetailViewProps> = ({
             return (
               <div
                 key={module.id}
+                style={{ animationDelay: `${index * 80}ms` }}
                 onClick={() => {
                   if (isClickable) {
                     onSelectModule(module.id);
                   }
                 }}
-                className={`group relative text-left bg-gradient-to-br ${colors.gradient} border border-white/[0.08] rounded-3xl p-5 sm:p-7 transition-all duration-200 ${
+                className={`group relative text-left bg-gradient-to-br ${colors.gradient} border border-white/[0.08] rounded-3xl p-5 sm:p-7 transition-all duration-300 animate-fade-in ${
                   isClickable
-                    ? `${colors.borderHover} hover:shadow-2xl hover:shadow-blue-950/40 hover:-translate-y-1 cursor-pointer`
+                    ? `${colors.borderHover} hover:shadow-2xl hover:shadow-blue-950/40 hover:-translate-y-1 active:scale-[0.99] cursor-pointer touch-manipulation`
                     : 'opacity-75 cursor-not-allowed'
                 } flex flex-col justify-between`}
               >
                 <div>
                   <div className="flex items-center justify-between gap-3 mb-4">
                     <div
-                      className={`w-12 h-12 rounded-2xl border flex items-center justify-center ${colors.iconBg} shadow-inner transition-transform group-hover:scale-105`}
+                      className={`w-11 h-11 sm:w-12 sm:h-12 rounded-2xl border flex items-center justify-center ${colors.iconBg} shadow-inner transition-transform group-hover:scale-105`}
                     >
-                      <Icon size={24} />
+                      <Icon size={22} />
                     </div>
                     <span
                       className={`text-[11px] font-mono font-semibold px-2.5 py-1 rounded-full border ${colors.tagColor}`}
@@ -223,7 +225,7 @@ export const SubjectDetailView: React.FC<SubjectDetailViewProps> = ({
           })}
         </div>
 
-        {/* Lembrete ou observação da matéria se aplicável */}
+        {/* Lembrete da prova para Banco de Dados */}
         {subject.id === 'banco-de-dados' && (
           <div className="mt-8 sm:mt-10 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.08] flex items-start sm:items-center gap-3 text-xs text-zinc-400">
             <Info size={18} className="text-blue-400 shrink-0 mt-0.5 sm:mt-0" />
@@ -240,8 +242,8 @@ export const SubjectDetailView: React.FC<SubjectDetailViewProps> = ({
         )}
       </main>
 
-      {/* Rodapé Minimalista */}
-      <footer className="w-full border-t border-white/[0.06] py-4 text-center text-xs text-zinc-500">
+      {/* Rodapé Minimalista com Safe Area */}
+      <footer className="w-full border-t border-white/[0.06] py-4 text-center text-xs text-zinc-500 pb-safe">
         Portal de Estudos • {subject.title} • Ciclo {subject.semester}
       </footer>
     </div>
