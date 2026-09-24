@@ -1,11 +1,12 @@
 import React from 'react';
-import { Search, X, Compass } from 'lucide-react';
+import { Search, X, Compass, Smartphone } from 'lucide-react';
 
 interface HubHeaderProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   activeCount: number;
   totalCount: number;
+  onOpenBottomBarSettings?: () => void;
 }
 
 export const HubHeader: React.FC<HubHeaderProps> = ({
@@ -13,6 +14,7 @@ export const HubHeader: React.FC<HubHeaderProps> = ({
   onSearchChange,
   activeCount,
   totalCount,
+  onOpenBottomBarSettings,
 }) => {
   // Sanitização de segurança de entrada
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,8 +90,8 @@ export const HubHeader: React.FC<HubHeaderProps> = ({
           </div>
         </div>
 
-        {/* Lado Direito: Status com Indicador Pulsante Suave */}
-        <div className="flex items-center shrink-0">
+        {/* Lado Direito: Status e Botão de Calibração de Botões */}
+        <div className="flex items-center gap-2 shrink-0">
           <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 rounded-full bg-white/[0.02] border border-white/[0.06]">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -106,6 +108,17 @@ export const HubHeader: React.FC<HubHeaderProps> = ({
               {totalCount} Total
             </span>
           </div>
+
+          {onOpenBottomBarSettings && (
+            <button
+              onClick={onOpenBottomBarSettings}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-950/40 hover:bg-cyan-900/60 active:scale-95 border border-cyan-800/60 text-cyan-300 hover:text-white text-[11px] font-medium transition-all cursor-pointer touch-manipulation shadow-sm shadow-cyan-950/20"
+              title="Ajuste de Botões do Celular (3 Botões / Gestos)"
+            >
+              <Smartphone size={13} className="text-cyan-400" />
+              <span className="hidden xs:inline">Botões</span>
+            </button>
+          )}
         </div>
       </div>
     </header>

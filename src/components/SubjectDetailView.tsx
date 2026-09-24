@@ -8,6 +8,7 @@ import {
   ArrowRight,
   Info,
   Clock,
+  Smartphone,
 } from 'lucide-react';
 import type { SubjectItem, AppModule } from '../types/navigation';
 
@@ -15,12 +16,14 @@ interface SubjectDetailViewProps {
   subject: SubjectItem;
   onBackToHub: () => void;
   onSelectModule: (module: AppModule) => void;
+  onOpenBottomBarSettings?: () => void;
 }
 
 export const SubjectDetailView: React.FC<SubjectDetailViewProps> = ({
   subject,
   onBackToHub,
   onSelectModule,
+  onOpenBottomBarSettings,
 }) => {
   const getModuleIcon = (id: string) => {
     switch (id) {
@@ -85,7 +88,7 @@ export const SubjectDetailView: React.FC<SubjectDetailViewProps> = ({
   return (
     <div
       data-page-bg="true"
-      className="w-screen h-screen overflow-y-auto bg-[#080b11]/75 backdrop-blur-[1px] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600/30 relative z-10"
+      className="w-screen h-screen h-[100dvh] overflow-y-auto bg-[#080b11]/75 backdrop-blur-[1px] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600/30 relative z-10"
     >
       {/* Header Superior Minimalista com Breadcrumb */}
       <header className="sticky top-0 z-40 w-full border-b border-white/[0.07] bg-[#080b11]/85 backdrop-blur-xl">
@@ -114,7 +117,17 @@ export const SubjectDetailView: React.FC<SubjectDetailViewProps> = ({
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <span className="text-[11px] text-zinc-400">
+            {onOpenBottomBarSettings && (
+              <button
+                onClick={onOpenBottomBarSettings}
+                className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-cyan-950/40 hover:bg-cyan-900/60 active:scale-95 border border-cyan-800/60 text-cyan-300 hover:text-white text-[11px] font-medium transition-all cursor-pointer touch-manipulation shadow-sm shadow-cyan-950/20"
+                title="Ajuste de Botões do Celular (3 Botões / Gestos)"
+              >
+                <Smartphone size={13} className="text-cyan-400" />
+                <span className="hidden xs:inline">Botões</span>
+              </button>
+            )}
+            <span className="text-[11px] text-zinc-400 hidden xs:inline">
               Semestre {subject.semester}
             </span>
           </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Smartphone } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 interface ModuleHeaderProps {
@@ -10,6 +10,7 @@ interface ModuleHeaderProps {
   badgeColor?: string;
   backLabel?: string;
   onBack: () => void;
+  onOpenBottomBarSettings?: () => void;
 }
 
 export const ModuleHeader: React.FC<ModuleHeaderProps> = ({
@@ -20,6 +21,7 @@ export const ModuleHeader: React.FC<ModuleHeaderProps> = ({
   badgeColor = 'bg-blue-900/60 border-blue-700/60 text-blue-300',
   backLabel = 'Voltar',
   onBack,
+  onOpenBottomBarSettings,
 }) => {
   return (
     <header className="sticky top-0 w-full min-h-[54px] pt-safe bg-[#080b11]/90 border-b border-white/[0.07] px-3 sm:px-6 py-2 flex items-center justify-between z-40 select-none backdrop-blur-xl shrink-0 gap-2 sm:gap-3">
@@ -42,7 +44,7 @@ export const ModuleHeader: React.FC<ModuleHeaderProps> = ({
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2 min-w-0">
-              <h1 className="text-xs sm:text-sm font-bold text-white tracking-tight truncate max-w-[170px] xxs:max-w-[210px] xs:max-w-[280px] sm:max-w-none">
+              <h1 className="text-xs sm:text-sm font-bold text-white tracking-tight truncate max-w-[150px] xxs:max-w-[190px] xs:max-w-[260px] sm:max-w-none">
                 {title}
               </h1>
               {badge && (
@@ -54,13 +56,25 @@ export const ModuleHeader: React.FC<ModuleHeaderProps> = ({
               )}
             </div>
             {subtitle && (
-              <p className="text-[10px] sm:text-[11px] text-zinc-400 truncate max-w-[260px] xs:max-w-[340px] md:max-w-none">
+              <p className="text-[10px] sm:text-[11px] text-zinc-400 truncate max-w-[240px] xs:max-w-[320px] md:max-w-none">
                 {subtitle}
               </p>
             )}
           </div>
         </div>
       </div>
+
+      {/* Lado Direito: Botão para Ajustar a Barra de 3 Botões / Gestos */}
+      {onOpenBottomBarSettings && (
+        <button
+          onClick={onOpenBottomBarSettings}
+          className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/[0.04] hover:bg-white/[0.08] active:scale-95 text-zinc-300 hover:text-white border border-white/[0.08] text-[11px] font-medium transition-all cursor-pointer touch-manipulation shrink-0"
+          title="Ajuste de Botões do Celular (3 Botões / Gestos)"
+        >
+          <Smartphone size={13} className="text-cyan-400" />
+          <span className="hidden xs:inline">Botões</span>
+        </button>
+      )}
     </header>
   );
 };

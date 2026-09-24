@@ -72,7 +72,7 @@ export const SimuladoView: React.FC<SimuladoViewProps> = ({ onBack }) => {
   const totalAnswered = Object.keys(selectedAnswers).length;
 
   return (
-    <div className="w-screen h-screen flex flex-col overflow-hidden bg-[#090d16] text-slate-100 font-sans antialiased selection:bg-blue-600/30">
+    <div className="w-screen h-screen h-[100dvh] flex flex-col overflow-hidden bg-[#090d16] text-slate-100 font-sans antialiased selection:bg-blue-600/30">
       {/* Cabeçalho do Simulado com Botão Voltar ao Início */}
       <ModuleHeader
         title="Simulado Oficial B1"
@@ -84,7 +84,7 @@ export const SimuladoView: React.FC<SimuladoViewProps> = ({ onBack }) => {
       />
 
       {/* Conteúdo Principal com Scroll */}
-      <div className="flex-1 overflow-y-auto p-3 sm:p-6 md:p-8">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-6 md:p-8 pb-safe">
         <div className="max-w-4xl mx-auto">
           {!isFinished ? (
             /* ================= TELA DO SIMULADO (1 QUESTÃO POR TELA) ================= */

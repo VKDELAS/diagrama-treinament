@@ -236,7 +236,7 @@ export const ResumoView: React.FC<ResumoViewProps> = ({ onBack }) => {
   );
 
   return (
-    <div className="w-screen h-screen flex flex-col overflow-hidden bg-[#090d16] text-slate-100 font-sans antialiased selection:bg-blue-600/30">
+    <div className="w-screen h-screen h-[100dvh] flex flex-col overflow-hidden bg-[#090d16] text-slate-100 font-sans antialiased selection:bg-blue-600/30">
       {/* Cabeçalho do Módulo com Botão Voltar ao Início */}
       <ModuleHeader
         title="Resumo Teórico B1"
@@ -280,7 +280,7 @@ export const ResumoView: React.FC<ResumoViewProps> = ({ onBack }) => {
       </div>
 
       {/* Conteúdo com Scroll */}
-      <div className="flex-1 overflow-y-auto p-4 sm:p-8">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-8 pb-safe">
         <div className="max-w-4xl mx-auto space-y-5">
           {/* Caixa de Destaque da Convenção da Prova */}
           <div className="bg-gradient-to-r from-blue-950/70 via-slate-900 to-indigo-950/70 border border-blue-800/60 rounded-2xl p-4 sm:p-5 shadow-lg">

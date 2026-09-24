@@ -104,7 +104,7 @@ export const FlashcardsB1View: React.FC<FlashcardsB1ViewProps> = ({ onBack }) =>
   };
 
   return (
-    <div className="w-screen h-screen flex flex-col overflow-hidden bg-[#080b11] text-slate-100 font-sans antialiased selection:bg-indigo-600/30">
+    <div className="w-screen h-screen h-[100dvh] flex flex-col overflow-hidden bg-[#080b11] text-slate-100 font-sans antialiased selection:bg-indigo-600/30">
       {/* Cabeçalho do Módulo */}
       <ModuleHeader
         title="Flashcards de Banco de Dados"
@@ -199,7 +199,7 @@ export const FlashcardsB1View: React.FC<FlashcardsB1ViewProps> = ({ onBack }) =>
       </div>
 
       {/* Área Central com o Flashcard 3D */}
-      <div className="flex-1 overflow-y-auto p-4 sm:p-8 flex flex-col items-center justify-center">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-8 pb-safe flex flex-col items-center justify-center">
         {totalCards > 0 && currentCard ? (
           <div className="w-full max-w-xl flex flex-col items-center">
             {/* Indicador de Posição da Carta */}

@@ -11,6 +11,7 @@
   --accent-cyan: #06b6d4;
   --accent-emerald: #10b981;
   --accent-rose: #f43f5e;
+  --bottom-nav-safe: 76px;
 }
 
 html, body, #root {
@@ -18,6 +19,8 @@ html, body, #root {
   padding: 0;
   width: 100%;
   height: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
   overflow: hidden;
   background-color: var(--bg-primary);
   color: #f1f5f9;
@@ -37,12 +40,18 @@ button, a, input, textarea, select {
   touch-action: manipulation;
 }
 
-/* Safe Area Insets para Celulares (iPhone com entalhe/Dynamic Island) */
+/* Safe Area Insets para Celulares (iPhone, Android 3 Botões ◀ ⌂ ▢ e Gestos) */
 .pt-safe {
   padding-top: max(env(safe-area-inset-top, 0px), 12px);
 }
 .pb-safe {
-  padding-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), var(--bottom-nav-safe, 76px)) !important;
+}
+.mb-safe {
+  margin-bottom: max(env(safe-area-inset-bottom, 0px), var(--bottom-nav-safe, 76px)) !important;
+}
+.bottom-safe {
+  bottom: max(env(safe-area-inset-bottom, 0px), var(--bottom-nav-safe, 76px)) !important;
 }
 .pl-safe {
   padding-left: max(env(safe-area-inset-left, 0px), 16px);

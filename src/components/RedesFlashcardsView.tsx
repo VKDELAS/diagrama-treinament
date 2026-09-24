@@ -20,10 +20,12 @@ import {
 
 interface RedesFlashcardsViewProps {
   onBack: () => void;
+  onOpenBottomBarSettings?: () => void;
 }
 
 export const RedesFlashcardsView: React.FC<RedesFlashcardsViewProps> = ({
   onBack,
+  onOpenBottomBarSettings,
 }) => {
   const [deck, setDeck] = useState<RedesFlashcard[]>(REDES_FLASHCARDS_DATA);
   const [selectedCategory, setSelectedCategory] = useState<string>('Todas');
@@ -131,7 +133,7 @@ export const RedesFlashcardsView: React.FC<RedesFlashcardsViewProps> = ({
   return (
     <div
       data-page-bg="true"
-      className="w-screen h-screen overflow-y-auto bg-[#080b11]/80 backdrop-blur-[1px] text-slate-100 flex flex-col font-sans antialiased selection:bg-cyan-600/30 relative z-10"
+      className="w-screen h-screen h-[100dvh] overflow-y-auto bg-[#080b11]/80 backdrop-blur-[1px] text-slate-100 flex flex-col font-sans antialiased selection:bg-cyan-600/30 relative z-10"
     >
       <ModuleHeader
         title="Flashcards de Fixação • Redes & Sistemas Distribuídos"
@@ -140,6 +142,7 @@ export const RedesFlashcardsView: React.FC<RedesFlashcardsViewProps> = ({
         icon={Network}
         badgeColor="bg-cyan-950/80 border-cyan-800 text-cyan-300"
         onBack={onBack}
+        onOpenBottomBarSettings={onOpenBottomBarSettings}
       />
 
       <main

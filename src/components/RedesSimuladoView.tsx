@@ -18,10 +18,12 @@ import {
 
 interface RedesSimuladoViewProps {
   onBack: () => void;
+  onOpenBottomBarSettings?: () => void;
 }
 
 export const RedesSimuladoView: React.FC<RedesSimuladoViewProps> = ({
   onBack,
+  onOpenBottomBarSettings,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<
@@ -84,7 +86,7 @@ export const RedesSimuladoView: React.FC<RedesSimuladoViewProps> = ({
   return (
     <div
       data-page-bg="true"
-      className="w-screen h-screen overflow-y-auto bg-[#080b11]/80 backdrop-blur-[1px] text-slate-100 flex flex-col font-sans antialiased selection:bg-cyan-600/30 relative z-10"
+      className="w-screen h-screen h-[100dvh] overflow-y-auto bg-[#080b11]/80 backdrop-blur-[1px] text-slate-100 flex flex-col font-sans antialiased selection:bg-cyan-600/30 relative z-10"
     >
       <ModuleHeader
         title="Simulado Oficial • Redes & Sistemas Distribuídos"
@@ -93,6 +95,7 @@ export const RedesSimuladoView: React.FC<RedesSimuladoViewProps> = ({
         icon={Award}
         badgeColor="bg-cyan-950/80 border-cyan-800 text-cyan-300"
         onBack={onBack}
+        onOpenBottomBarSettings={onOpenBottomBarSettings}
       />
 
       <main

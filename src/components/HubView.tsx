@@ -21,11 +21,13 @@ import type { SubjectItem, AppModule } from '../types/navigation';
 interface HubViewProps {
   onSelectSubject: (subject: SubjectItem) => void;
   onQuickLaunchModule: (subject: SubjectItem, module: AppModule) => void;
+  onOpenBottomBarSettings?: () => void;
 }
 
 export const HubView: React.FC<HubViewProps> = ({
   onSelectSubject,
   onQuickLaunchModule,
+  onOpenBottomBarSettings,
 }) => {
   const subjects = DEFAULT_SUBJECTS;
   const [searchQuery, setSearchQuery] = useState('');
@@ -73,7 +75,7 @@ export const HubView: React.FC<HubViewProps> = ({
   return (
     <div
       data-page-bg="true"
-      className="w-screen h-screen overflow-y-auto bg-[#080b11]/75 backdrop-blur-[1px] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600/30 relative z-10"
+      className="w-screen h-screen h-[100dvh] overflow-y-auto bg-[#080b11]/75 backdrop-blur-[1px] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600/30 relative z-10"
     >
       {/* Header Minimalista Estilo Linear/Raycast */}
       <HubHeader
@@ -81,6 +83,7 @@ export const HubView: React.FC<HubViewProps> = ({
         onSearchChange={setSearchQuery}
         activeCount={activeCount}
         totalCount={totalCount}
+        onOpenBottomBarSettings={onOpenBottomBarSettings}
       />
 
       {/* Conteúdo Principal do Hub */}

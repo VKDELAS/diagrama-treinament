@@ -11,9 +11,13 @@ import { ModuleHeader } from './ModuleHeader';
 
 interface RedesLabViewProps {
   onBack: () => void;
+  onOpenBottomBarSettings?: () => void;
 }
 
-export const RedesLabView: React.FC<RedesLabViewProps> = ({ onBack }) => {
+export const RedesLabView: React.FC<RedesLabViewProps> = ({
+  onBack,
+  onOpenBottomBarSettings,
+}) => {
   const [activeTab, setActiveTab] = useState<'calc' | 'layers'>('calc');
 
   // Estados da Calculadora de IP
@@ -201,7 +205,7 @@ export const RedesLabView: React.FC<RedesLabViewProps> = ({ onBack }) => {
   return (
     <div
       data-page-bg="true"
-      className="w-screen h-screen overflow-y-auto bg-[#080b11]/80 backdrop-blur-[1px] text-slate-100 flex flex-col font-sans antialiased selection:bg-cyan-600/30 relative z-10"
+      className="w-screen h-screen h-[100dvh] overflow-y-auto bg-[#080b11]/80 backdrop-blur-[1px] text-slate-100 flex flex-col font-sans antialiased selection:bg-cyan-600/30 relative z-10"
     >
       <ModuleHeader
         title="Laboratório Interativo & Calculadora IP"
@@ -210,6 +214,7 @@ export const RedesLabView: React.FC<RedesLabViewProps> = ({ onBack }) => {
         icon={Calculator}
         badgeColor="bg-cyan-950/80 border-cyan-800 text-cyan-300"
         onBack={onBack}
+        onOpenBottomBarSettings={onOpenBottomBarSettings}
       />
 
       <main
