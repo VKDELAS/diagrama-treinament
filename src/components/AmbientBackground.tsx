@@ -22,7 +22,39 @@ export const AmbientBackground: React.FC = () => {
 
     const handlePointerMove = (e: PointerEvent) => {
       setMousePos({ x: e.clientX, y: e.clientY });
-      setIsPointerActive(true);
+
+      // Pega o elemento exatamente abaixo da ponta do cursor do mouse
+      const target = document.elementFromPoint(
+        e.clientX,
+        e.clientY
+      ) as HTMLElement | null;
+
+      if (!target) {
+        setIsPointerActive(false);
+        return;
+      }
+
+      // Se o mouse estiver sobre qualquer elemento interativo, card, texto, botão, cabeçalho ou modal:
+      // O efeito NÃO deve aparecer (ele só pega no background limpo da página).
+      const isOverContent = Boolean(
+        target.closest(
+          'button, a, input, select, textarea, [role="button"], [role="dialog"], header, footer, nav, article, section, [data-content-box="true"], .group, h1, h2, h3, h4, h5, h6, p, ul, ol, li, span, code, pre, svg, table, [data-interactive="true"]'
+        )
+      );
+
+      // Além disso, verificamos se o elemento é o container de fundo ou tem data-page-bg="true"
+      const isDirectBackground =
+        target.getAttribute('data-page-bg') === 'true' ||
+        target === document.body ||
+        target === document.documentElement ||
+        target.id === 'root';
+
+      // O efeito só é ativado se estiver estritamente no background e não estiver sobre nenhum elemento de conteúdo
+      if (isDirectBackground && !isOverContent) {
+        setIsPointerActive(true);
+      } else {
+        setIsPointerActive(false);
+      }
     };
 
     const handlePointerLeave = () => {
@@ -44,41 +76,38 @@ export const AmbientBackground: React.FC = () => {
       className="fixed inset-0 pointer-events-none overflow-hidden select-none z-0"
       aria-hidden="true"
     >
-      {/* 1. BOLA QUE SE MEXE BEM LENTAMENTE NO FUNDO (Orbe Primária Azul/Ciano) */}
+      {/* 1. Orbe Primária Azul/Ciano Estática (SEM ANIMAÇÃO DE MOVIMENTO) */}
       <div
-        className="absolute top-1/4 left-1/4 w-[420px] h-[420px] sm:w-[620px] sm:h-[620px] rounded-full animate-float-orb blur-[90px] sm:blur-[130px] opacity-70 transition-transform"
+        className="absolute top-1/6 left-1/4 w-[420px] h-[420px] sm:w-[620px] sm:h-[620px] rounded-full blur-[100px] sm:blur-[140px] opacity-35"
         style={{
           background:
-            'radial-gradient(circle, rgba(56, 189, 248, 0.28) 0%, rgba(99, 102, 241, 0.2) 40%, rgba(14, 165, 233, 0.06) 70%, transparent 100%)',
+            'radial-gradient(circle, rgba(6, 182, 212, 0.22) 0%, rgba(59, 130, 246, 0.14) 45%, rgba(14, 165, 233, 0.04) 75%, transparent 100%)',
         }}
       />
 
-      {/* 2. ORBE SECUNDÁRIA COMPLEMENTAR (Flutua bem lentamente em roxo/índigo) */}
+      {/* 2. Orbe Secundária Roxa/Índigo Estática (SEM ANIMAÇÃO DE MOVIMENTO) */}
       <div
-        className="absolute bottom-1/4 right-1/4 w-[340px] h-[340px] sm:w-[500px] sm:h-[500px] rounded-full animate-float-orb-secondary blur-[85px] sm:blur-[120px] opacity-60 transition-transform"
+        className="absolute bottom-1/6 right-1/4 w-[340px] h-[340px] sm:w-[500px] sm:h-[500px] rounded-full blur-[95px] sm:blur-[130px] opacity-30"
         style={{
           background:
-            'radial-gradient(circle, rgba(168, 85, 247, 0.22) 0%, rgba(59, 130, 246, 0.14) 50%, transparent 100%)',
+            'radial-gradient(circle, rgba(168, 85, 247, 0.16) 0%, rgba(99, 102, 241, 0.10) 50%, transparent 100%)',
         }}
       />
 
-      {/* 3. EFEITO DE SEGUIR O MOUSE (Spotlight luminoso suave que acompanha o cursor) */}
+      {/* 3. EFEITO DO MOUSE: SÓ APARECE NO BACKGROUND (Some ao passar por cima de qualquer card, texto, botão ou elemento) */}
       {isFinePointer && (
         <div
-          className={`absolute rounded-full pointer-events-none transition-opacity duration-300 ${
+          className={`absolute rounded-full pointer-events-none transition-opacity duration-150 ${
             isPointerActive ? 'opacity-100' : 'opacity-0'
           }`}
           style={{
-            width: '520px',
-            height: '520px',
-            left: `${mousePos.x - 260}px`,
-            top: `${mousePos.y - 260}px`,
+            width: '460px',
+            height: '460px',
+            left: `${mousePos.x - 230}px`,
+            top: `${mousePos.y - 230}px`,
             background:
-              'radial-gradient(circle, rgba(56, 189, 248, 0.16) 0%, rgba(99, 102, 241, 0.08) 35%, rgba(59, 130, 246, 0.02) 65%, transparent 80%)',
-            transitionProperty: 'opacity, transform',
-            transitionDuration: '250ms, 80ms',
-            transitionTimingFunction: 'ease-out',
-            filter: 'blur(35px)',
+              'radial-gradient(circle, rgba(56, 189, 248, 0.18) 0%, rgba(99, 102, 241, 0.08) 35%, rgba(6, 182, 212, 0.02) 65%, transparent 80%)',
+            filter: 'blur(32px)',
           }}
         />
       )}

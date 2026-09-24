@@ -83,7 +83,10 @@ export const SubjectDetailView: React.FC<SubjectDetailViewProps> = ({
   };
 
   return (
-    <div className="w-screen h-screen overflow-y-auto bg-[#080b11]/75 backdrop-blur-[1px] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600/30 relative z-10">
+    <div
+      data-page-bg="true"
+      className="w-screen h-screen overflow-y-auto bg-[#080b11]/75 backdrop-blur-[1px] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600/30 relative z-10"
+    >
       {/* Header Superior Minimalista com Breadcrumb */}
       <header className="sticky top-0 z-40 w-full border-b border-white/[0.07] bg-[#080b11]/85 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto h-14 px-3 sm:px-6 flex items-center justify-between gap-3">
@@ -119,7 +122,10 @@ export const SubjectDetailView: React.FC<SubjectDetailViewProps> = ({
       </header>
 
       {/* Conteúdo da Matéria com animação suave de entrada */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-3.5 sm:px-8 py-6 sm:py-10 flex flex-col justify-center animate-fade-in">
+      <main
+        data-page-bg="true"
+        className="flex-1 max-w-6xl w-full mx-auto px-3.5 sm:px-8 py-6 sm:py-10 flex flex-col justify-center animate-fade-in"
+      >
         {/* Banner da Matéria */}
         <div className="max-w-3xl mb-6 sm:mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-xs font-medium text-zinc-300 mb-2.5">
@@ -237,6 +243,17 @@ export const SubjectDetailView: React.FC<SubjectDetailViewProps> = ({
                 (0,N) perto de Compra
               </code>{' '}
               = cada cliente tem de zero a muitas compras.
+            </p>
+          </div>
+        )}
+
+        {/* Lembrete da prova para Redes e Sistemas Distribuídos */}
+        {subject.id === 'redes-sistemas-distribuidos' && (
+          <div className="mt-8 sm:mt-10 p-4 rounded-2xl bg-cyan-950/20 border border-cyan-500/30 flex items-start sm:items-center gap-3 text-xs text-cyan-300">
+            <Info size={18} className="text-cyan-400 shrink-0 mt-0.5 sm:mt-0" />
+            <p>
+              <strong className="text-white">Cola Rápida do Prof. Fábio:</strong>{' '}
+              OSI = 7 camadas | TCP/IP didático = 5 | Bits (Física) - Quadros (Enlace) - Pacotes (Rede) - Segmentos (Transporte) | Roteador = interliga redes | Switch = mesma rede | Privados: 10.x, 172.16-31.x, 192.168.x. Cuidado: 192.165 e 172.32 são PÚBLICOS!
             </p>
           </div>
         )}

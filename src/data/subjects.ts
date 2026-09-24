@@ -63,6 +63,67 @@ export const DEFAULT_SUBJECTS: SubjectItem[] = [
     ],
   },
   {
+    id: 'redes-sistemas-distribuidos',
+    title: 'Redes e Sistemas Distribuídos',
+    code: 'RSD-201',
+    semester: 'B1',
+    category: 'Infraestrutura & Redes',
+    description:
+      'Modelo OSI (7 camadas), TCP/IP (5 camadas), dispositivos intermediários vs hosts, LAN/WAN/Intranet, cálculo de IPv4 com máscara (/16), IPs privados (RFC 1918) e pegadinhas do Prof. Fábio.',
+    status: 'available',
+    accentColor: 'text-cyan-400',
+    gradient: 'from-cyan-600/20 via-slate-900 to-blue-900/10',
+    borderHover: 'hover:border-cyan-500/60',
+    iconBg: 'bg-cyan-600/20 border-cyan-500/40 text-cyan-400',
+    tagColor: 'text-cyan-400 bg-cyan-950/80 border-cyan-800/60',
+    badgeColor: 'bg-cyan-950 text-cyan-400 border-cyan-800/80',
+    modulesCount: 4,
+    stats: {
+      flashcards: 34,
+      questions: 10,
+      topics: 8,
+      exercises: 10,
+    },
+    modules: [
+      {
+        id: 'flashcards',
+        title: 'Flashcards de Fixação da Matéria',
+        tag: '34 Cartas • 7 Variedades',
+        badge: 'Repetição Ativa',
+        description:
+          '34 flashcards divididos em: Camadas OSI, TCP/IP & PDUs, Dispositivos de Rede, Tipos de Rede, IPv4 & Máscaras, IPs Privados & Pegadinhas e Cola Rápida.',
+        available: true,
+      },
+      {
+        id: 'simulado',
+        title: 'Simulado Oficial da Matéria',
+        tag: '10 Questões • Prova do Fábio',
+        badge: 'Simulação de Prova',
+        description:
+          'As 10 questões da prova com gabarito oficial comentado (D, D, C, A, C, B, A, B, D, A) e explicações das pegadinhas de IP.',
+        available: true,
+      },
+      {
+        id: 'resumo',
+        title: 'Resumo Teórico da Matéria',
+        tag: '8 Tópicos + Cola Rápida',
+        badge: 'Teoria Direta',
+        description:
+          'Tabela comparativa OSI vs TCP/IP, dispositivos intermediários, cálculo de máscara (255 copia, 0 zera) e faixas privadas da RFC 1918.',
+        available: true,
+      },
+      {
+        id: 'diagramas',
+        title: 'Laboratório Interativo & Calculadora IP',
+        tag: 'Calculadora + Simulador',
+        badge: 'Prática Interativa',
+        description:
+          'Calculadora visual de rede com máscara (/16, /24), identificador RFC 1918 (Privado vs Público) e inspetor visual das 7 camadas.',
+        available: true,
+      },
+    ],
+  },
+  {
     id: 'eng-software',
     title: 'Engenharia de Software',
     code: 'ES-201',

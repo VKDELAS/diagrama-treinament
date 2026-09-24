@@ -22,39 +22,39 @@ export const ModuleHeader: React.FC<ModuleHeaderProps> = ({
   onBack,
 }) => {
   return (
-    <header className="w-full min-h-[56px] bg-slate-900/95 border-b border-slate-800 px-3 sm:px-6 py-2.5 flex items-center justify-between z-40 select-none backdrop-blur-md shrink-0 gap-3">
-      <div className="flex items-center gap-2 sm:gap-4">
-        {/* Botão de retorno padronizado */}
+    <header className="sticky top-0 w-full min-h-[54px] pt-safe bg-[#080b11]/90 border-b border-white/[0.07] px-3 sm:px-6 py-2 flex items-center justify-between z-40 select-none backdrop-blur-xl shrink-0 gap-2 sm:gap-3">
+      <div className="flex items-center gap-2 sm:gap-3.5 min-w-0">
+        {/* Botão de retorno padronizado e minimalista */}
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 hover:text-white border border-slate-700 text-xs sm:text-sm font-semibold transition-all cursor-pointer shadow-sm touch-manipulation"
+          className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] active:scale-95 text-zinc-300 hover:text-white border border-white/[0.08] text-xs font-medium transition-all cursor-pointer shadow-sm touch-manipulation shrink-0"
           title="Voltar"
         >
-          <ArrowLeft size={16} className="text-blue-400" />
-          <span>{backLabel}</span>
+          <ArrowLeft size={15} className="text-cyan-400" />
+          <span className="hidden xs:inline">{backLabel}</span>
         </button>
 
-        <div className="h-5 w-px bg-slate-800 hidden xs:block" />
+        <div className="h-4 w-px bg-white/10 hidden xs:block shrink-0" />
 
-        <div className="flex items-center gap-2.5">
-          <div className="p-1.5 sm:p-2 rounded-xl bg-slate-800 border border-slate-700 text-blue-400 shrink-0">
-            <Icon size={18} />
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="p-1.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-cyan-400 shrink-0 hidden xxs:flex">
+            <Icon size={16} />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-xs sm:text-sm md:text-base font-bold text-white tracking-wide">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 min-w-0">
+              <h1 className="text-xs sm:text-sm font-bold text-white tracking-tight truncate max-w-[170px] xxs:max-w-[210px] xs:max-w-[280px] sm:max-w-none">
                 {title}
               </h1>
               {badge && (
                 <span
-                  className={`text-[9px] uppercase font-mono font-bold px-2 py-0.5 rounded-full border hidden sm:inline ${badgeColor}`}
+                  className={`text-[9px] uppercase font-mono font-bold px-2 py-0.5 rounded-full border hidden sm:inline shrink-0 ${badgeColor}`}
                 >
                   {badge}
                 </span>
               )}
             </div>
             {subtitle && (
-              <p className="text-[11px] text-slate-400 hidden md:block">
+              <p className="text-[10px] sm:text-[11px] text-zinc-400 truncate max-w-[260px] xs:max-w-[340px] md:max-w-none">
                 {subtitle}
               </p>
             )}

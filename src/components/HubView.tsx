@@ -36,12 +36,14 @@ export const HubView: React.FC<HubViewProps> = ({
     switch (id) {
       case 'banco-de-dados':
         return Database;
+      case 'redes-sistemas-distribuidos':
+        return Network;
       case 'eng-software':
         return Code2;
       case 'estrutura-dados':
-        return Network;
-      case 'poo-programacao':
         return Cpu;
+      case 'poo-programacao':
+        return BookPlus;
       default:
         return BookPlus;
     }
@@ -69,7 +71,10 @@ export const HubView: React.FC<HubViewProps> = ({
   const totalCount = subjects.length;
 
   return (
-    <div className="w-screen h-screen overflow-y-auto bg-[#080b11]/75 backdrop-blur-[1px] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600/30 relative z-10">
+    <div
+      data-page-bg="true"
+      className="w-screen h-screen overflow-y-auto bg-[#080b11]/75 backdrop-blur-[1px] text-slate-100 flex flex-col font-sans antialiased selection:bg-blue-600/30 relative z-10"
+    >
       {/* Header Minimalista Estilo Linear/Raycast */}
       <HubHeader
         searchQuery={searchQuery}
@@ -79,7 +84,10 @@ export const HubView: React.FC<HubViewProps> = ({
       />
 
       {/* Conteúdo Principal do Hub */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 py-6 sm:py-10 flex flex-col">
+      <main
+        data-page-bg="true"
+        className="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 py-6 sm:py-10 flex flex-col"
+      >
         {/* Hero Minimalista com animação de entrada */}
         <div className="max-w-3xl mb-6 sm:mb-9 animate-fade-in">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.08] text-zinc-300 text-xs font-medium mb-2.5 shadow-sm">

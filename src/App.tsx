@@ -11,6 +11,10 @@ import { SubjectDetailView } from './components/SubjectDetailView';
 import { ResumoView } from './components/ResumoView';
 import { SimuladoView } from './components/SimuladoView';
 import { FlashcardsB1View } from './components/FlashcardsB1View';
+import { RedesResumoView } from './components/RedesResumoView';
+import { RedesSimuladoView } from './components/RedesSimuladoView';
+import { RedesFlashcardsView } from './components/RedesFlashcardsView';
+import { RedesLabView } from './components/RedesLabView';
 import { AmbientBackground } from './components/AmbientBackground';
 import { DEFAULT_SUBJECTS } from './data/subjects';
 import type { AppModule, SubjectItem } from './types/navigation';
@@ -24,7 +28,7 @@ export const App: React.FC = () => {
 
   return (
     <>
-      {/* Fundo com orbe que se mexe bem lentamente e spotlight que segue o mouse */}
+      {/* Fundo estático e spotlight de mouse elegante que oculta ao passar sobre elementos */}
       <AmbientBackground />
 
       {/* 1. Hub Principal: Contém estritamente as MATÉRIAS */}
@@ -51,42 +55,54 @@ export const App: React.FC = () => {
       )}
 
       {/* 3. Módulo de Resumo Teórico da Matéria Selecionada */}
-      {currentModule === 'resumo' && (
-        <ResumoView onBack={() => setCurrentModule('subject')} />
-      )}
+      {currentModule === 'resumo' &&
+        (selectedSubject.id === 'redes-sistemas-distribuidos' ? (
+          <RedesResumoView onBack={() => setCurrentModule('subject')} />
+        ) : (
+          <ResumoView onBack={() => setCurrentModule('subject')} />
+        ))}
 
       {/* 4. Módulo do Simulado Oficial da Matéria Selecionada */}
-      {currentModule === 'simulado' && (
-        <SimuladoView onBack={() => setCurrentModule('subject')} />
-      )}
+      {currentModule === 'simulado' &&
+        (selectedSubject.id === 'redes-sistemas-distribuidos' ? (
+          <RedesSimuladoView onBack={() => setCurrentModule('subject')} />
+        ) : (
+          <SimuladoView onBack={() => setCurrentModule('subject')} />
+        ))}
 
       {/* 5. Módulo de Flashcards de Fixação da Matéria Selecionada */}
-      {currentModule === 'flashcards' && (
-        <FlashcardsB1View onBack={() => setCurrentModule('subject')} />
-      )}
+      {currentModule === 'flashcards' &&
+        (selectedSubject.id === 'redes-sistemas-distribuidos' ? (
+          <RedesFlashcardsView onBack={() => setCurrentModule('subject')} />
+        ) : (
+          <FlashcardsB1View onBack={() => setCurrentModule('subject')} />
+        ))}
 
-      {/* 6. Módulo de Treino de Diagramas da Matéria Selecionada */}
-      {currentModule === 'diagramas' && (
-        <div className="w-screen h-screen flex flex-col overflow-hidden bg-[#080b11]/90 text-slate-100 font-sans antialiased relative z-10">
-          <ReactFlowProvider>
-            {/* Header com botão de voltar para a matéria */}
-            <Header onBackToHub={() => setCurrentModule('subject')} />
+      {/* 6. Módulo de Treino Prático / Laboratório da Matéria Selecionada */}
+      {currentModule === 'diagramas' &&
+        (selectedSubject.id === 'redes-sistemas-distribuidos' ? (
+          <RedesLabView onBack={() => setCurrentModule('subject')} />
+        ) : (
+          <div className="w-screen h-screen flex flex-col overflow-hidden bg-[#080b11]/90 text-slate-100 font-sans antialiased relative z-10">
+            <ReactFlowProvider>
+              {/* Header com botão de voltar para a matéria */}
+              <Header onBackToHub={() => setCurrentModule('subject')} />
 
-            {/* Painel Colapsável de Enunciado e Regra de Ouro */}
-            <ExercisePrompt />
+              {/* Painel Colapsável de Enunciado e Regra de Ouro */}
+              <ExercisePrompt />
 
-            {/* Canvas de Modelagem Interativo */}
-            <DiagramCanvas />
+              {/* Canvas de Modelagem Interativo */}
+              <DiagramCanvas />
 
-            {/* Bandeja Inferior Fixa de Peças Estilo brModelo */}
-            <PieceTray />
+              {/* Bandeja Inferior Fixa de Peças Estilo brModelo */}
+              <PieceTray />
 
-            {/* Modais Globais */}
-            <ConnectionModal />
-            <FeedbackModal />
-          </ReactFlowProvider>
-        </div>
-      )}
+              {/* Modais Globais */}
+              <ConnectionModal />
+              <FeedbackModal />
+            </ReactFlowProvider>
+          </div>
+        ))}
     </>
   );
 };

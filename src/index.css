@@ -119,50 +119,6 @@ button, a, input, textarea, select {
   animation: pulseGlow 3s ease-in-out infinite;
 }
 
-/* Animação suave para a bola/orbe ambiente que flutua bem lentamente */
-@keyframes floatOrbSlow {
-  0% {
-    transform: translate(0px, 0px) scale(1);
-  }
-  25% {
-    transform: translate(140px, 80px) scale(1.12);
-  }
-  50% {
-    transform: translate(60px, 220px) scale(0.95);
-  }
-  75% {
-    transform: translate(-110px, 130px) scale(1.08);
-  }
-  100% {
-    transform: translate(0px, 0px) scale(1);
-  }
-}
-
-@keyframes floatOrbSecondary {
-  0% {
-    transform: translate(0px, 0px) scale(1);
-  }
-  33% {
-    transform: translate(-150px, 120px) scale(1.15);
-  }
-  66% {
-    transform: translate(90px, 190px) scale(0.92);
-  }
-  100% {
-    transform: translate(0px, 0px) scale(1);
-  }
-}
-
-.animate-float-orb {
-  animation: floatOrbSlow 26s ease-in-out infinite;
-  will-change: transform;
-}
-
-.animate-float-orb-secondary {
-  animation: floatOrbSecondary 34s ease-in-out infinite;
-  will-change: transform;
-}
-
 /* Custom styles for React Flow in Dark Navy theme */
 .react-flow__background {
   background-color: #0b1120;
