@@ -10,10 +10,85 @@ export interface CRunResult {
   errorMessage?: string;
 }
 
+/**
+ * Valida sintaxe básica de C antes de transpilação.
+ * Retorna mensagem de erro ou null se código parece válido.
+ */
+function validateCSyntax(code: string): string | null {
+  // Remove comentários antes de validar para evitar falsos positivos
+  let clean = code;
+  clean = clean.replace(/\/\*[\s\S]*?\*\//g, '');
+  clean = clean.replace(/\/\/.*$/gm, '');
+  // Remove strings literais (evita detectar ; dentro de strings)
+  clean = clean.replace(/"(?:[^"\\]|\\.)*"/g, '""');
+  clean = clean.replace(/'(?:[^'\\]|\\.)*'/g, "''");
+  // Remove diretivas de pré-processador
+  clean = clean.replace(/^\s*#.*$/gm, '');
+
+  // 1. Verifica delimitadores balanceados
+  const pairs: Record<string, string> = { '{': '}', '(': ')', '[': ']' };
+  const stack: string[] = [];
+  for (const ch of clean) {
+    if (ch === '{' || ch === '(' || ch === '[') {
+      stack.push(pairs[ch]);
+    } else if (ch === '}' || ch === ')' || ch === ']') {
+      if (stack.length === 0 || stack[stack.length - 1] !== ch) {
+        const names: Record<string, string> = { '}': 'chave }', ')': 'parêntese )', ']': 'colchete ]' };
+        return `${names[ch] ?? ch} fechando sem abertura correspondente`;
+      }
+      stack.pop();
+    }
+  }
+  if (stack.length > 0) {
+    const names: Record<string, string> = { '}': 'chave }', ')': 'parêntese )', ']': 'colchete ]' };
+    return `Faltando ${names[stack[stack.length - 1]] ?? stack[stack.length - 1]} para fechar`;
+  }
+
+  // 2. Verifica ponto e vírgula faltando em linhas de statement
+  const lines = clean.split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const raw = lines[i].trim();
+    if (!raw) continue;
+
+    // Ignora linhas que são: cabeçalhos de bloco, pré-processador, só chaves, declaração de função/main
+    if (
+      raw === '{' || raw === '}' || raw === '{' ||
+      raw.endsWith('{') || raw.endsWith('}') ||
+      raw.startsWith('#') ||
+      /^(if|else|for|while|do|switch)\b/.test(raw) ||
+      /^(int|void|float|double|char)\s+\w+\s*\(/.test(raw) || // declaração de função
+      raw === 'else' || raw === 'else {' || raw === '} else {' || raw === '} else'
+    ) continue;
+
+    // Linha de statement que deve terminar com ;
+    // Padrão: linha que contém código executável e não termina com ; { } ou ,
+    const isStatement =
+      /\b(printf|scanf|return|break|continue)\s*\(/.test(raw) ||
+      /\b(int|float|double|char|long|short)\s+\w/.test(raw) ||
+      /^\w[\w.\[\]]*\s*(=|\+=|-=|\*=|\/=|%=)/.test(raw);
+
+    if (isStatement && !/[;{}]$/.test(raw) && !raw.endsWith(',')) {
+      return `Linha ${i + 1}: faltando ponto e vírgula (;) → "${raw.substring(0, 60)}"`;
+    }
+  }
+
+  return null;
+}
+
 export function executeCCode(
   code: string,
   customInputs?: number[]
 ): CRunResult {
+  // Valida sintaxe antes de executar
+  const syntaxError = validateCSyntax(code);
+  if (syntaxError) {
+    return {
+      output: [`❌ Erro de sintaxe: ${syntaxError}`],
+      hasError: true,
+      errorMessage: syntaxError,
+    };
+  }
+
   const outputBuffer: string[] = [];
   let currentLine = '';
 
