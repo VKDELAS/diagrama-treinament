@@ -160,6 +160,10 @@ export const ProgCLabView: React.FC<ProgCLabViewProps> = ({
     'editor'
   );
   const [copied, setCopied] = useState<boolean>(false);
+  // Estado do painel de stdin interativo
+  const [awaitingInput, setAwaitingInput] = useState<boolean>(false);
+  const [stdinInput, setStdinInput] = useState<string>('');
+  const stdinInputRef = useRef<HTMLTextAreaElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const preRef = useRef<HTMLPreElement>(null);
   const lineNumbersRef = useRef<HTMLDivElement>(null);
@@ -499,20 +503,67 @@ export const ProgCLabView: React.FC<ProgCLabViewProps> = ({
     }
   };
 
-  // Execução do código C digitado pelo usuário em compilador GCC real
-  const handleRunCode = async () => {
-    setIsRunning(true);
+  // Detecta se o código contém scanf (precisa de entrada do usuário)
+  const codeHasScanf = /\bscanf\s*\(/.test(code);
+
+  // Ao clicar em "Executar":
+  // - Se o código tem scanf, abre o painel de entrada interativa primeiro
+  // - Se não tem scanf, roda direto
+  const handleRunCode = () => {
     setActiveTab('terminal');
+    setTerminalOutput([]);
+
+    if (codeHasScanf) {
+      setAwaitingInput(true);
+      setStdinInput('');
+      setTimeout(() => stdinInputRef.current?.focus(), 100);
+    } else {
+      runWithStdin('');
+    }
+  };
+
+  // Executa com o stdin fornecido pelo usuário (ou vazio para programas sem scanf)
+  const runWithStdin = async (stdinText: string) => {
+    setAwaitingInput(false);
+    setIsRunning(true);
 
     try {
-      const result = await executeCCode(code);
-      setTerminalOutput(result.output);
+      const result = await executeCCode(code, stdinText);
+
+      // Intercala inputs com a saída para simular aparência de terminal real
+      if (stdinText.trim() && result.source === 'gcc-real' && !result.hasError) {
+        const inputLines = stdinText.trim().split('\n');
+        const outputLines = result.output;
+        const merged: string[] = [];
+        let inputIdx = 0;
+
+        for (const line of outputLines) {
+          merged.push(line);
+          // Após linhas que pedem entrada (prompt), mostra o que o usuário digitou
+          if (
+            inputIdx < inputLines.length &&
+            (line.includes(':') || line.toLowerCase().includes('digi') || line.trim().endsWith(':'))
+          ) {
+            merged.push(`\u001b[36m${inputLines[inputIdx]}\u001b[0m`);
+            inputIdx++;
+          }
+        }
+
+        setTerminalOutput(merged.length > 0 ? merged : result.output);
+      } else {
+        setTerminalOutput(result.output);
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       setTerminalOutput([`Erro na execução: ${msg}`]);
     } finally {
       setIsRunning(false);
     }
+  };
+
+  // Submete os inputs do usuário e roda o programa
+  const handleSubmitStdin = () => {
+    runWithStdin(stdinInput);
   };
 
   return (
@@ -777,43 +828,118 @@ export const ProgCLabView: React.FC<ProgCLabViewProps> = ({
           )}
 
           {activeTab === 'terminal' && (
-            <div className="flex-1 flex flex-col font-mono text-xs sm:text-sm bg-black/95 p-4 overflow-y-auto">
-              <div className="flex items-center justify-between border-b border-white/[0.08] pb-2 mb-3 text-zinc-400 text-xs">
+            <div className="flex-1 flex flex-col font-mono text-xs sm:text-sm bg-black/95 overflow-hidden">
+
+              {/* Header do Terminal */}
+              <div className="flex items-center justify-between px-4 py-2 border-b border-white/[0.08] text-zinc-400 text-xs shrink-0">
                 <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
                   <Terminal size={14} />
-                  <span>Terminal de Saída</span>
+                  <span>Terminal</span>
+                  {awaitingInput && (
+                    <span className="ml-1 px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-mono">
+                      aguardando entrada
+                    </span>
+                  )}
+                  {isRunning && (
+                    <span className="ml-1 px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px] font-mono animate-pulse">
+                      compilando...
+                    </span>
+                  )}
                 </span>
                 <button
-                  onClick={() => setTerminalOutput([])}
+                  onClick={() => { setTerminalOutput([]); setAwaitingInput(false); }}
                   className="text-zinc-500 hover:text-zinc-300 text-xs cursor-pointer transition-colors"
                 >
-                  Limpar tela
+                  Limpar
                 </button>
               </div>
 
-              {terminalOutput.length === 0 ? (
-                <div className="flex-1 flex flex-col items-center justify-center text-center text-zinc-500 gap-2 py-8">
-                  <Terminal size={32} className="opacity-40" />
-                  <p>O terminal está pronto. Clique em "Executar Código" abaixo!</p>
-                </div>
-              ) : (
-                <div className="space-y-1 font-mono">
-                  {terminalOutput.map((line, idx) => (
-                    <div
-                      key={idx}
-                      className={
-                        line.startsWith('Erro:')
-                          ? 'text-rose-400 font-semibold bg-rose-950/20 p-1.5 rounded'
-                          : line.startsWith('Soma')
-                          ? 'text-amber-300 font-bold'
-                          : 'text-zinc-200'
+              {/* Painel de Entrada Interativa (aparece quando o código tem scanf) */}
+              {awaitingInput && (
+                <div className="p-4 border-b border-amber-500/20 bg-amber-950/10 shrink-0">
+                  <p className="text-amber-300 text-xs font-semibold mb-1 flex items-center gap-1.5">
+                    <span>⌨️</span>
+                    <span>Seu programa usa <code className="font-mono bg-white/10 px-1 rounded">scanf</code> — digite os valores de entrada:</span>
+                  </p>
+                  <p className="text-zinc-400 text-[11px] mb-2">
+                    Um valor por linha. Ex: se seu programa pede 3 números, escreva um em cada linha.
+                  </p>
+                  <textarea
+                    ref={stdinInputRef}
+                    value={stdinInput}
+                    onChange={(e) => setStdinInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                        e.preventDefault();
+                        handleSubmitStdin();
                       }
+                    }}
+                    placeholder={"10\n20\n30\n..."}
+                    rows={4}
+                    className="w-full bg-black/60 border border-amber-500/30 rounded-lg p-2.5 font-mono text-xs text-amber-100 placeholder-zinc-600 resize-none outline-none focus:border-amber-400/60 transition-colors"
+                  />
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      onClick={handleSubmitStdin}
+                      className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold cursor-pointer transition-all active:scale-95"
                     >
-                      {line}
-                    </div>
-                  ))}
+                      <Play size={12} fill="currentColor" />
+                      Executar com esses valores
+                    </button>
+                    <button
+                      onClick={() => setAwaitingInput(false)}
+                      className="px-3 py-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.1] text-zinc-400 text-xs cursor-pointer transition-all"
+                    >
+                      Cancelar
+                    </button>
+                    <span className="text-zinc-600 text-[10px] self-center ml-auto hidden sm:inline">Ctrl+Enter para executar</span>
+                  </div>
                 </div>
               )}
+
+              {/* Saída do Terminal */}
+              <div className="flex-1 p-4 overflow-y-auto">
+                {!awaitingInput && terminalOutput.length === 0 && !isRunning ? (
+                  <div className="flex-1 flex flex-col items-center justify-center text-center text-zinc-500 gap-2 py-8">
+                    <Terminal size={32} className="opacity-40" />
+                    <p>O terminal está pronto. Clique em &quot;Executar Código&quot; abaixo!</p>
+                  </div>
+                ) : isRunning ? (
+                  <div className="flex items-center gap-2 text-blue-400 text-xs">
+                    <span className="inline-block w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+                    <span>Compilando e executando com GCC...</span>
+                  </div>
+                ) : (
+                  <div className="space-y-0.5 font-mono">
+                    {terminalOutput.map((line, idx) => {
+                      const isError =
+                        line.includes('error:') ||
+                        line.includes('Erro:') ||
+                        line.startsWith('❌') ||
+                        line.includes('Linha') && line.includes('coluna') && line.includes(':');
+                      const isWarning = line.includes('warning:') || line.includes('note:');
+                      const isInput = line.startsWith('\u001b[36m');
+                      const displayLine = isInput ? line.replace(/\u001b\[[0-9;]*m/g, '') : line;
+                      return (
+                        <div
+                          key={idx}
+                          className={
+                            isError
+                              ? 'text-rose-400 font-semibold'
+                              : isWarning
+                              ? 'text-amber-400'
+                              : isInput
+                              ? 'text-cyan-300 font-semibold'
+                              : 'text-zinc-200'
+                          }
+                        >
+                          {displayLine}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
           )}
 

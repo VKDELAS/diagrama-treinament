@@ -368,22 +368,25 @@ function executeLocalFallback(
  * Função principal exportada:
  * Tenta compilar e rodar no compilador GCC Real;
  * Se houver erro de rede, utiliza o fallback local.
+ * @param stdinText - Texto de entrada digitado pelo usuário (valores separados por \n)
  */
 export async function executeCCode(
   code: string,
-  customInputs?: number[]
+  stdinText?: string
 ): Promise<CRunResult> {
-  const defaultInputs = [
-    10, 20, 5, 15, 30, 8, 12, 4, 6, 10,
-    2, 5, 7, 3, 8, 1, 9, 4, 6, 1, 2, 3, 4, 5
-  ];
-  const inputs = customInputs && customInputs.length > 0 ? customInputs : defaultInputs;
-  const stdinText = inputs.join('\n') + '\n';
+  // stdin padrão para quando o usuário não digitou nada (modo automático do fallback)
+  const defaultStdin = '10\n20\n5\n15\n30\n8\n12\n4\n6\n10\n2\n5\n7\n3\n8\n1\n9\n4\n6\n';
+  const resolvedStdin = stdinText !== undefined ? stdinText : defaultStdin;
 
   try {
-    return await executeGCCReal(code, stdinText);
+    return await executeGCCReal(code, resolvedStdin);
   } catch {
     // Se a API estiver offline ou sem internet, cai no fallback local
-    return executeLocalFallback(code, customInputs);
+    const numericInputs = resolvedStdin
+      .trim()
+      .split(/\s+/)
+      .map(Number)
+      .filter((n) => !isNaN(n));
+    return executeLocalFallback(code, numericInputs.length > 0 ? numericInputs : undefined);
   }
 }
