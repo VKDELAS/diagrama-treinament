@@ -151,7 +151,6 @@ int main(void) {
     }
 
     printf("Soma dos elementos: %d\\n", soma);
-    return 0;
 }`,
     lineByLineExplanation: [
       {
@@ -216,7 +215,6 @@ int main(void) {
     }
 
     printf("Soma da diagonal principal: %d\\n", soma);
-    return 0;
 }`,
     lineByLineExplanation: [
       {

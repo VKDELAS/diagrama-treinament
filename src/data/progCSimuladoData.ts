@@ -239,7 +239,6 @@ int main(void) {
     }
 
     printf("Soma dos elementos: %d\\n", soma);
-    return 0;
 }`,
     checkCriteria: [
       'Declaração de vetor com 10 posições inteiras (int vetor[10])',
@@ -276,7 +275,6 @@ int main(void) {
     }
 
     printf("Soma da diagonal principal: %d\\n", soma);
-    return 0;
 }`,
     checkCriteria: [
       'Declaração de matriz 3x3 de inteiros (int matriz[3][3])',

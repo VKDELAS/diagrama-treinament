@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { ModuleHeader } from './ModuleHeader';
+import { executeCCode } from '../utils/cRunner';
 
 interface QuickShortcutItem {
   label: string;
@@ -42,7 +43,7 @@ const QUICK_SHORTCUTS: QuickShortcutItem[] = [
   { label: 'for', symbol: 'for (int i = 0; i < ; i++) {\n    \n}' },
   { label: 'printf', symbol: 'printf("%d\\n", );' },
   { label: 'scanf', symbol: 'scanf("%d", &);' },
-  { label: 'return 0;', symbol: 'return 0;' },
+  { label: 'else', symbol: 'else {\n    \n}' },
 ];
 
 interface ProgCLabViewProps {
@@ -77,8 +78,6 @@ int main(void) {
 
     // 3. Exiba a soma de todos os elementos
     printf("Soma dos elementos: %d\\n", soma);
-
-    return 0;
 }`,
   q10: `#include <stdio.h>
 
@@ -98,14 +97,14 @@ int main(void) {
 
     // 3. Exiba a soma da diagonal principal
     printf("Soma da diagonal principal: %d\\n", soma);
-
-    return 0;
 }`,
   free: `#include <stdio.h>
 
 int main(void) {
-    printf("Ola, Programacao em C!\\n");
-    return 0;
+    for (i = 0; i < 5; i++) {
+        if (i == 3) continue;
+        printf("%d ", i);
+    }
 }`,
 };
 
@@ -121,8 +120,6 @@ int main(void) {
 
     // TODO: Mostre a soma com printf
     
-
-    return 0;
 }`,
   q10: `#include <stdio.h>
 
@@ -135,15 +132,12 @@ int main(void) {
 
     // TODO: Some a diagonal principal e exiba o resultado
     
-
-    return 0;
 }`,
   free: `#include <stdio.h>
 
 int main(void) {
     // Seu codigo aqui
     
-    return 0;
 }`,
 };
 
@@ -451,8 +445,10 @@ export const ProgCLabView: React.FC<ProgCLabViewProps> = ({
       {
         id: 'main_fn',
         label: 'Função main definida (int main(void))',
-        passed: /int\s+main\s*\(/i.test(cleanCode),
-        tip: 'Todo programa em C inicia pela função int main(void).',
+        passed:
+          /int\s+main\s*\(/i.test(cleanCode) ||
+          /void\s+main\s*\(/i.test(cleanCode),
+        tip: 'Todo programa em C inicia pela função main.',
       },
       {
         id: 'stdio',
@@ -461,10 +457,10 @@ export const ProgCLabView: React.FC<ProgCLabViewProps> = ({
         tip: 'stdio.h é necessário para usar printf e scanf.',
       },
       {
-        id: 'return0',
-        label: 'Retorno com sucesso (return 0;)',
-        passed: /return\s+0\s*;/i.test(cleanCode),
-        tip: 'Finalize a main com return 0; indicando execução bem sucedida.',
+        id: 'printf_usage',
+        label: 'Exibição de saída com printf',
+        passed: /printf\s*\(/i.test(cleanCode),
+        tip: 'Use printf para exibir dados na tela.',
       },
     ];
   }, [code, selectedChallenge]);
@@ -486,63 +482,16 @@ export const ProgCLabView: React.FC<ProgCLabViewProps> = ({
     }
   };
 
-  // Emulação de execução do código C
+  // Execução do código C digitado pelo usuário em tempo real
   const handleRunCode = () => {
     setIsRunning(true);
     setActiveTab('terminal');
-    setTerminalOutput([
-      'Compilando código com gcc -Wall -Wextra main.c -o programa...',
-    ]);
 
     setTimeout(() => {
-      const outputLines: string[] = [
-        'c-runner@nexus:~$ gcc -Wall -Wextra main.c -o programa',
-        '[OK] Compilação bem-sucedida! Nenhum warning gerado.',
-        'c-runner@nexus:~$ ./programa',
-        '-------------------------------------------------------',
-      ];
-
-      if (selectedChallenge === 'q9') {
-        const testValues = [10, 20, 5, 15, 30, 8, 12, 4, 6, 10];
-        let runningSum = 0;
-        testValues.forEach((val, idx) => {
-          outputLines.push(`Digite o valor ${idx + 1}: ${val}`);
-          runningSum += val;
-        });
-        outputLines.push('-------------------------------------------------------');
-        outputLines.push(`Soma dos elementos: ${runningSum}`);
-        outputLines.push('');
-        outputLines.push('Processo finalizado com código 0 (return 0;)');
-      } else if (selectedChallenge === 'q10') {
-        // Matriz 3x3 com valores de teste conhecidos
-        const mat = [
-          [2, 5, 7],
-          [3, 8, 1],
-          [9, 4, 6],
-        ];
-        let diagSum = 0;
-        for (let i = 0; i < 3; i++) {
-          for (let j = 0; j < 3; j++) {
-            outputLines.push(`Digite o valor [${i}][${j}]: ${mat[i][j]}`);
-          }
-          diagSum += mat[i][i];
-        }
-        outputLines.push('-------------------------------------------------------');
-        outputLines.push(
-          `Elementos da diagonal principal somados: mat[0][0]=${mat[0][0]} + mat[1][1]=${mat[1][1]} + mat[2][2]=${mat[2][2]}`
-        );
-        outputLines.push(`Soma da diagonal principal: ${diagSum}`);
-        outputLines.push('');
-        outputLines.push('Processo finalizado com código 0 (return 0;)');
-      } else {
-        outputLines.push('Ola, Programacao em C!');
-        outputLines.push('');
-        outputLines.push('Processo finalizado com código 0 (return 0;)');
-      }
-
-      setTerminalOutput(outputLines);
+      const result = executeCCode(code);
+      setTerminalOutput(result.output);
       setIsRunning(false);
-    }, 700);
+    }, 150);
   };
 
   return (
@@ -777,37 +726,35 @@ export const ProgCLabView: React.FC<ProgCLabViewProps> = ({
           {activeTab === 'terminal' && (
             <div className="flex-1 flex flex-col font-mono text-xs sm:text-sm bg-black/95 p-4 overflow-y-auto">
               <div className="flex items-center justify-between border-b border-white/[0.08] pb-2 mb-3 text-zinc-400 text-xs">
-                <span className="flex items-center gap-1.5 text-emerald-400">
+                <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
                   <Terminal size={14} />
-                  <span>Terminal de Saída GCC</span>
+                  <span>Terminal de Saída</span>
                 </span>
                 <button
                   onClick={() => setTerminalOutput([])}
-                  className="text-zinc-500 hover:text-zinc-300 text-xs"
+                  className="text-zinc-500 hover:text-zinc-300 text-xs cursor-pointer transition-colors"
                 >
                   Limpar tela
                 </button>
               </div>
 
               {terminalOutput.length === 0 ? (
-                <div className="flex-1 flex flex-col items-center justify-center text-center text-zinc-500 gap-2">
+                <div className="flex-1 flex flex-col items-center justify-center text-center text-zinc-500 gap-2 py-8">
                   <Terminal size={32} className="opacity-40" />
                   <p>O terminal está pronto. Clique em "Executar Código" abaixo!</p>
                 </div>
               ) : (
-                <div className="space-y-1">
+                <div className="space-y-1 font-mono">
                   {terminalOutput.map((line, idx) => (
                     <div
                       key={idx}
-                      className={`${
-                        line.startsWith('c-runner')
-                          ? 'text-cyan-400 font-bold'
-                          : line.startsWith('[OK]')
-                          ? 'text-emerald-400 font-bold'
+                      className={
+                        line.startsWith('Erro:')
+                          ? 'text-rose-400 font-semibold bg-rose-950/20 p-1.5 rounded'
                           : line.startsWith('Soma')
-                          ? 'text-amber-300 font-bold text-sm bg-amber-950/20 p-1 rounded'
-                          : 'text-zinc-300'
-                      }`}
+                          ? 'text-amber-300 font-bold'
+                          : 'text-zinc-200'
+                      }
                     >
                       {line}
                     </div>
