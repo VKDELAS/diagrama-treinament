@@ -499,16 +499,20 @@ export const ProgCLabView: React.FC<ProgCLabViewProps> = ({
     }
   };
 
-  // Execução do código C digitado pelo usuário em tempo real
-  const handleRunCode = () => {
+  // Execução do código C digitado pelo usuário em compilador GCC real
+  const handleRunCode = async () => {
     setIsRunning(true);
     setActiveTab('terminal');
 
-    setTimeout(() => {
-      const result = executeCCode(code);
+    try {
+      const result = await executeCCode(code);
       setTerminalOutput(result.output);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setTerminalOutput([`Erro na execução: ${msg}`]);
+    } finally {
       setIsRunning(false);
-    }, 150);
+    }
   };
 
   return (
