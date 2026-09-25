@@ -13,6 +13,7 @@ import {
   Clock,
   Layers3,
   Search,
+  Terminal,
 } from 'lucide-react';
 import { HubHeader } from './HubHeader';
 import { DEFAULT_SUBJECTS } from '../data/subjects';
@@ -40,6 +41,8 @@ export const HubView: React.FC<HubViewProps> = ({
         return Database;
       case 'redes-sistemas-distribuidos':
         return Network;
+      case 'programacao-em-c':
+        return Terminal;
       case 'eng-software':
         return Code2;
       case 'estrutura-dados':

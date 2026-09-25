@@ -124,6 +124,67 @@ export const DEFAULT_SUBJECTS: SubjectItem[] = [
     ],
   },
   {
+    id: 'programacao-em-c',
+    title: 'Programação em C',
+    code: 'PC-101',
+    semester: 'B1',
+    category: 'Linguagem C & Algoritmos',
+    description:
+      'Declaração de tipos, operador resto (%), operadores relacionais e lógicos, if/else, switch-case (break e fall-through), laços (while, do-while, for), vetores e matrizes bidimensionais com foco na prova.',
+    status: 'available',
+    accentColor: 'text-sky-400',
+    gradient: 'from-sky-600/20 via-slate-900 to-indigo-900/10',
+    borderHover: 'hover:border-sky-500/60',
+    iconBg: 'bg-sky-600/20 border-sky-500/40 text-sky-400',
+    tagColor: 'text-sky-400 bg-sky-950/80 border-sky-800/60',
+    badgeColor: 'bg-sky-950 text-sky-400 border-sky-800/80',
+    modulesCount: 4,
+    stats: {
+      flashcards: 23,
+      questions: 10,
+      topics: 10,
+      exercises: 2,
+    },
+    modules: [
+      {
+        id: 'resumo',
+        title: 'Resumo Teórico da Matéria',
+        tag: '10 Questões da Prova',
+        badge: 'Teoria Direta',
+        description:
+          'Gabarito rápido (Q1 a Q8), o que cada questão cobra, decorebas rápidas e códigos completos explicados linha a linha.',
+        available: true,
+      },
+      {
+        id: 'simulado',
+        title: 'Simulado Oficial da Matéria',
+        tag: '10 Questões • Vale 10,0',
+        badge: 'Simulação de Prova',
+        description:
+          '8 questões de múltipla escolha com gabarito imediato e 2 questões discursivas de código com critérios de correção da prova.',
+        available: true,
+      },
+      {
+        id: 'flashcards',
+        title: 'Flashcards de Fixação da Matéria',
+        tag: '23 Cartas • 7 Variedades',
+        badge: 'Repetição Ativa',
+        description:
+          'Fixação ágil de declaração de variáveis, operador %, operadores lógicos, estruturas condicionais, laços, vetores e pegadinhas da prova.',
+        available: true,
+      },
+      {
+        id: 'diagramas',
+        title: 'Laboratório & Treino de Código C',
+        tag: 'Teclado Mobile + Terminal',
+        badge: 'Prática de Código',
+        description:
+          'Sistema para treinar as 2 questões discursivas (Vetor e Matriz 3x3), com teclado móvel de atalhos {}, (), [], &, verificador de critérios e terminal GCC de execução.',
+        available: true,
+      },
+    ],
+  },
+  {
     id: 'eng-software',
     title: 'Engenharia de Software',
     code: 'ES-201',

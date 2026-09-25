@@ -15,6 +15,10 @@ import { RedesResumoView } from './components/RedesResumoView';
 import { RedesSimuladoView } from './components/RedesSimuladoView';
 import { RedesFlashcardsView } from './components/RedesFlashcardsView';
 import { RedesLabView } from './components/RedesLabView';
+import { ProgCResumoView } from './components/ProgCResumoView';
+import { ProgCSimuladoView } from './components/ProgCSimuladoView';
+import { ProgCFlashcardsView } from './components/ProgCFlashcardsView';
+import { ProgCLabView } from './components/ProgCLabView';
 import { BottomBarAdjusterModal } from './components/BottomBarAdjusterModal';
 import { AmbientBackground } from './components/AmbientBackground';
 import { DEFAULT_SUBJECTS } from './data/subjects';
@@ -28,6 +32,7 @@ export const App: React.FC = () => {
     DEFAULT_SUBJECTS[0]
   );
   const [isBottomBarModalOpen, setIsBottomBarModalOpen] = useState(false);
+  const [labInitialQuestion, setLabInitialQuestion] = useState<9 | 10>(9);
 
   // Inicializa a detecção de botões de navegação no primeiro carregamento
   useEffect(() => {
@@ -76,7 +81,16 @@ export const App: React.FC = () => {
 
       {/* 3. Módulo de Resumo Teórico da Matéria Selecionada */}
       {currentModule === 'resumo' &&
-        (selectedSubject.id === 'redes-sistemas-distribuidos' ? (
+        (selectedSubject.id === 'programacao-em-c' ? (
+          <ProgCResumoView
+            onBack={() => setCurrentModule('subject')}
+            onOpenBottomBarSettings={openBottomBarSettings}
+            onOpenLab={(qId) => {
+              setLabInitialQuestion(qId);
+              setCurrentModule('diagramas');
+            }}
+          />
+        ) : selectedSubject.id === 'redes-sistemas-distribuidos' ? (
           <RedesResumoView
             onBack={() => setCurrentModule('subject')}
             onOpenBottomBarSettings={openBottomBarSettings}
@@ -87,7 +101,16 @@ export const App: React.FC = () => {
 
       {/* 4. Módulo do Simulado Oficial da Matéria Selecionada */}
       {currentModule === 'simulado' &&
-        (selectedSubject.id === 'redes-sistemas-distribuidos' ? (
+        (selectedSubject.id === 'programacao-em-c' ? (
+          <ProgCSimuladoView
+            onBack={() => setCurrentModule('subject')}
+            onOpenBottomBarSettings={openBottomBarSettings}
+            onOpenLab={(qId) => {
+              setLabInitialQuestion(qId);
+              setCurrentModule('diagramas');
+            }}
+          />
+        ) : selectedSubject.id === 'redes-sistemas-distribuidos' ? (
           <RedesSimuladoView
             onBack={() => setCurrentModule('subject')}
             onOpenBottomBarSettings={openBottomBarSettings}
@@ -98,7 +121,12 @@ export const App: React.FC = () => {
 
       {/* 5. Módulo de Flashcards de Fixação da Matéria Selecionada */}
       {currentModule === 'flashcards' &&
-        (selectedSubject.id === 'redes-sistemas-distribuidos' ? (
+        (selectedSubject.id === 'programacao-em-c' ? (
+          <ProgCFlashcardsView
+            onBack={() => setCurrentModule('subject')}
+            onOpenBottomBarSettings={openBottomBarSettings}
+          />
+        ) : selectedSubject.id === 'redes-sistemas-distribuidos' ? (
           <RedesFlashcardsView
             onBack={() => setCurrentModule('subject')}
             onOpenBottomBarSettings={openBottomBarSettings}
@@ -109,7 +137,13 @@ export const App: React.FC = () => {
 
       {/* 6. Módulo de Treino Prático / Laboratório da Matéria Selecionada */}
       {currentModule === 'diagramas' &&
-        (selectedSubject.id === 'redes-sistemas-distribuidos' ? (
+        (selectedSubject.id === 'programacao-em-c' ? (
+          <ProgCLabView
+            onBack={() => setCurrentModule('subject')}
+            onOpenBottomBarSettings={openBottomBarSettings}
+            initialQuestionId={labInitialQuestion}
+          />
+        ) : selectedSubject.id === 'redes-sistemas-distribuidos' ? (
           <RedesLabView
             onBack={() => setCurrentModule('subject')}
             onOpenBottomBarSettings={openBottomBarSettings}
