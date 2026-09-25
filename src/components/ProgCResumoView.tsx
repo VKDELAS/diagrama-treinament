@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { ModuleHeader } from './ModuleHeader';
 import { C_QUESTIONS_DATA, type CQuestionInfo } from '../data/progCQuestionsData';
+import { highlightCCode } from '../utils/cHighlighter';
 
 interface ProgCResumoViewProps {
   onBack: () => void;
@@ -254,9 +255,13 @@ export const ProgCResumoView: React.FC<ProgCResumoViewProps> = ({
                           </div>
                         </div>
 
-                        {/* Bloco de Código Estilo Terminal */}
-                        <div className="p-3.5 sm:p-4 rounded-xl bg-[#03060a] border border-white/[0.08] font-mono text-xs sm:text-sm text-emerald-400 overflow-x-auto leading-relaxed">
-                          <pre>{q.fullCode}</pre>
+                        {/* Bloco de Código Estilo Terminal com Cores Coddy */}
+                        <div className="p-3.5 sm:p-4 rounded-xl bg-[#03060a] border border-white/[0.08] font-mono text-xs sm:text-sm overflow-x-auto leading-relaxed">
+                          <pre
+                            dangerouslySetInnerHTML={{
+                              __html: highlightCCode(q.fullCode || ''),
+                            }}
+                          />
                         </div>
 
                         {/* Explicação Linha a Linha */}

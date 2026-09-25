@@ -17,6 +17,7 @@ import {
   PROG_C_SIMULADO_QUESTIONS,
   type CSimuladoQuestion,
 } from '../data/progCSimuladoData';
+import { highlightCCode } from '../utils/cHighlighter';
 
 interface ProgCSimuladoViewProps {
   onBack: () => void;
@@ -261,10 +262,14 @@ export const ProgCSimuladoView: React.FC<ProgCSimuladoViewProps> = ({
               </p>
             </div>
 
-            {/* Trecho de Código opcional no enunciado */}
+            {/* Trecho de Código opcional no enunciado com Cores Coddy */}
             {currentQuestion.codeSnippet && (
-              <div className="p-3.5 rounded-xl bg-[#03060a] border border-white/[0.08] font-mono text-xs sm:text-sm text-cyan-300 overflow-x-auto">
-                <pre>{currentQuestion.codeSnippet}</pre>
+              <div className="p-3.5 rounded-xl bg-[#03060a] border border-white/[0.08] font-mono text-xs sm:text-sm overflow-x-auto">
+                <pre
+                  dangerouslySetInnerHTML={{
+                    __html: highlightCCode(currentQuestion.codeSnippet),
+                  }}
+                />
               </div>
             )}
 
@@ -382,8 +387,14 @@ export const ProgCSimuladoView: React.FC<ProgCSimuladoViewProps> = ({
                       <span>Gabarito Oficial da Prova:</span>
                     </div>
 
-                    <div className="p-3.5 rounded-xl bg-[#03060a] border border-white/[0.08] font-mono text-xs sm:text-sm text-emerald-400 overflow-x-auto">
-                      <pre>{currentQuestion.expectedCode}</pre>
+                    <div className="p-3.5 rounded-xl bg-[#03060a] border border-white/[0.08] font-mono text-xs sm:text-sm overflow-x-auto">
+                      <pre
+                        dangerouslySetInnerHTML={{
+                          __html: highlightCCode(
+                            currentQuestion.expectedCode || ''
+                          ),
+                        }}
+                      />
                     </div>
 
                     {currentQuestion.checkCriteria && (

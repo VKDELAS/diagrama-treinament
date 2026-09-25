@@ -17,6 +17,7 @@ import {
 import confetti from 'canvas-confetti';
 import { ModuleHeader } from './ModuleHeader';
 import { executeCCode } from '../utils/cRunner';
+import { highlightCCode } from '../utils/cHighlighter';
 
 interface QuickShortcutItem {
   label: string;
@@ -160,6 +161,22 @@ export const ProgCLabView: React.FC<ProgCLabViewProps> = ({
   );
   const [copied, setCopied] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const preRef = useRef<HTMLPreElement>(null);
+  const lineNumbersRef = useRef<HTMLDivElement>(null);
+
+  // Sintaxe colorida estilo Coddy em tempo real
+  const highlightedHtml = useMemo(() => highlightCCode(code), [code]);
+
+  // Sincroniza o scroll entre o textarea, a pré-visualização colorida e a coluna de números
+  const handleScroll = (e: React.UIEvent<HTMLTextAreaElement>) => {
+    if (preRef.current) {
+      preRef.current.scrollTop = e.currentTarget.scrollTop;
+      preRef.current.scrollLeft = e.currentTarget.scrollLeft;
+    }
+    if (lineNumbersRef.current) {
+      lineNumbersRef.current.scrollTop = e.currentTarget.scrollTop;
+    }
+  };
 
   // Troca de desafio
   const handleSelectChallenge = (c: ChallengeType) => {
@@ -699,27 +716,59 @@ export const ProgCLabView: React.FC<ProgCLabViewProps> = ({
         {/* Área Principal: Editor ou Terminal ou Checklist */}
         <div className="flex-1 min-h-[380px] sm:min-h-[440px] flex flex-col rounded-2xl bg-[#03060a] border border-white/[0.08] overflow-hidden relative shadow-2xl">
           {activeTab === 'editor' && (
-            <div className="relative flex-1 flex flex-col font-mono text-xs sm:text-sm">
-              <div className="flex items-center justify-between px-4 py-2 bg-white/[0.02] border-b border-white/[0.06] text-zinc-400 text-xs">
+            <div className="relative flex-1 flex flex-col font-mono text-xs sm:text-sm bg-[#05080f]">
+              {/* Barra superior estilo aba de IDE */}
+              <div className="flex items-center justify-between px-4 py-2 bg-white/[0.02] border-b border-white/[0.06] text-zinc-400 text-xs select-none">
                 <div className="flex items-center gap-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80"></div>
                   <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80"></div>
                   <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></div>
-                  <span className="ml-2 text-zinc-500">main.c</span>
+                  <span className="ml-2 text-zinc-300 font-semibold font-mono">main.c</span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono">
+                    C99
+                  </span>
                 </div>
-                <span className="text-[11px] text-zinc-500">
+                <span className="text-[11px] text-zinc-500 font-mono">
                   {code.split('\n').length} linhas
                 </span>
               </div>
 
-              <textarea
-                ref={textareaRef}
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                spellCheck={false}
-                className="flex-1 w-full p-4 bg-transparent text-emerald-400/90 font-mono text-xs sm:text-sm leading-relaxed outline-none resize-none selection:bg-blue-500/40"
-                placeholder="Escreva seu código em C aqui..."
-              />
+              {/* Corpo do Editor: Números de Linha + Código Colorido Coddy + Textarea Sobreposta */}
+              <div className="relative flex-1 flex overflow-hidden">
+                {/* Coluna de Números de Linha */}
+                <div
+                  ref={lineNumbersRef}
+                  aria-hidden="true"
+                  className="select-none py-3 px-2 sm:px-3 text-right font-mono text-xs sm:text-sm leading-relaxed text-zinc-600 bg-white/[0.015] border-r border-white/[0.06] overflow-hidden shrink-0 min-w-[36px] sm:min-w-[44px]"
+                >
+                  {code.split('\n').map((_, idx) => (
+                    <div key={idx}>{idx + 1}</div>
+                  ))}
+                </div>
+
+                {/* Camada de Código com Sintaxe Colorida estilo Coddy */}
+                <div className="relative flex-1 overflow-hidden">
+                  <pre
+                    ref={preRef}
+                    aria-hidden="true"
+                    className="absolute inset-0 p-3 m-0 font-mono text-xs sm:text-sm leading-relaxed pointer-events-none overflow-hidden whitespace-pre font-normal select-none"
+                    dangerouslySetInnerHTML={{ __html: highlightedHtml + '\n' }}
+                  />
+
+                  {/* Textarea transparente sincronizada para digitação */}
+                  <textarea
+                    ref={textareaRef}
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    onScroll={handleScroll}
+                    spellCheck={false}
+                    autoCapitalize="none"
+                    autoComplete="off"
+                    className="absolute inset-0 w-full h-full p-3 m-0 bg-transparent text-transparent caret-sky-400 font-mono text-xs sm:text-sm leading-relaxed resize-none outline-none overflow-auto whitespace-pre font-normal selection:bg-blue-500/30 selection:text-transparent"
+                    placeholder="Escreva seu código em C aqui..."
+                  />
+                </div>
+              </div>
             </div>
           )}
 
